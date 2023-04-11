@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="default_web_client_id" translatable="false">1091266526048-h9au3rdjhn2vdl53sgqqc6kf85c51s4t.apps.googleusercontent.com</string>
+    <string name="firebase_database_url" translatable="false">https://unblu-prototype-testapp.firebaseio.com</string>
+    <string name="gcm_defaultSenderId" translatable="false">1091266526048</string>
+    <string name="google_api_key" translatable="false">AIzaSyAndVFKjNUUTXf1NUwzW_Zf-GVzaHfkPnY</string>
+    <string name="google_app_id" translatable="false">1:1091266526048:android:93fe178f3b792a46d1bc05</string>
+    <string name="google_crash_reporting_api_key" translatable="false">AIzaSyAndVFKjNUUTXf1NUwzW_Zf-GVzaHfkPnY</string>
+    <string name="google_storage_bucket" translatable="false">unblu-prototype-testapp.appspot.com</string>
+    <string name="project_id" translatable="false">unblu-prototype-testapp</string>
+</resources>

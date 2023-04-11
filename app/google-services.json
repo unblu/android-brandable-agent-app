@@ -1,0 +1,391 @@
+{
+  "project_info": {
+    "project_number": "1091266526048",
+    "firebase_url": "https://unblu-prototype-testapp.firebaseio.com",
+    "project_id": "unblu-prototype-testapp",
+    "storage_bucket": "unblu-prototype-testapp.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1091266526048:android:9f0e5ce2631b72d8d1bc05",
+        "android_client_info": {
+          "package_name": "com.prototype.android.visitortestapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1091266526048-ucchbtfu60b8m3crleuqj1h09cgpjure.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.prototype.android.visitortestapp",
+            "certificate_hash": "f5fb3bbb416b225cea705274c06c61f4246cea24"
+          }
+        },
+        {
+          "client_id": "1091266526048-h9au3rdjhn2vdl53sgqqc6kf85c51s4t.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAndVFKjNUUTXf1NUwzW_Zf-GVzaHfkPnY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1091266526048-h9au3rdjhn2vdl53sgqqc6kf85c51s4t.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1091266526048-0t2obj172f4hulnocmuitoj9ror8vv3g.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.unblu.prototype.VisitorTestApp"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1091266526048:android:11331a329dbac755d1bc05",
+        "android_client_info": {
+          "package_name": "com.unblu.android.visitortestapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1091266526048-9p0sgd71s54upumfnk7r193k7hpnj7m3.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.unblu.android.visitortestapp",
+            "certificate_hash": "f5fb3bbb416b225cea705274c06c61f4246cea24"
+          }
+        },
+        {
+          "client_id": "1091266526048-h9au3rdjhn2vdl53sgqqc6kf85c51s4t.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAndVFKjNUUTXf1NUwzW_Zf-GVzaHfkPnY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1091266526048-h9au3rdjhn2vdl53sgqqc6kf85c51s4t.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1091266526048-0t2obj172f4hulnocmuitoj9ror8vv3g.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.unblu.prototype.VisitorTestApp"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1091266526048:android:93fe178f3b792a46d1bc05",
+        "android_client_info": {
+          "package_name": "com.unblu.brandeableagentapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1091266526048-arnqu2p4llrlthtnuh3h64smgh9bd5sk.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.unblu.brandeableagentapp",
+            "certificate_hash": "f5fb3bbb416b225cea705274c06c61f4246cea24"
+          }
+        },
+        {
+          "client_id": "1091266526048-h9au3rdjhn2vdl53sgqqc6kf85c51s4t.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAndVFKjNUUTXf1NUwzW_Zf-GVzaHfkPnY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1091266526048-h9au3rdjhn2vdl53sgqqc6kf85c51s4t.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1091266526048-0t2obj172f4hulnocmuitoj9ror8vv3g.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.unblu.prototype.VisitorTestApp"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1091266526048:android:4fb7400bd8213835d1bc05",
+        "android_client_info": {
+          "package_name": "com.unblu.mobile.ubank"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1091266526048-h9au3rdjhn2vdl53sgqqc6kf85c51s4t.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAndVFKjNUUTXf1NUwzW_Zf-GVzaHfkPnY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1091266526048-h9au3rdjhn2vdl53sgqqc6kf85c51s4t.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1091266526048-0t2obj172f4hulnocmuitoj9ror8vv3g.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.unblu.prototype.VisitorTestApp"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1091266526048:android:81aa638d713316c7",
+        "android_client_info": {
+          "package_name": "com.unblu.prototype.agenttestapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1091266526048-h9au3rdjhn2vdl53sgqqc6kf85c51s4t.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAndVFKjNUUTXf1NUwzW_Zf-GVzaHfkPnY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1091266526048-h9au3rdjhn2vdl53sgqqc6kf85c51s4t.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1091266526048-0t2obj172f4hulnocmuitoj9ror8vv3g.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.unblu.prototype.VisitorTestApp"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1091266526048:android:d2fabb7e98bb94cd",
+        "android_client_info": {
+          "package_name": "com.unblu.prototype.visitortestapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1091266526048-ji690kv6dj51gl98d1abk70o21ncfsgv.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.unblu.prototype.visitortestapp",
+            "certificate_hash": "f5fb3bbb416b225cea705274c06c61f4246cea24"
+          }
+        },
+        {
+          "client_id": "1091266526048-h9au3rdjhn2vdl53sgqqc6kf85c51s4t.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAndVFKjNUUTXf1NUwzW_Zf-GVzaHfkPnY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1091266526048-h9au3rdjhn2vdl53sgqqc6kf85c51s4t.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1091266526048-0t2obj172f4hulnocmuitoj9ror8vv3g.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.unblu.prototype.VisitorTestApp"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1091266526048:android:5531b7adaffd3a71d1bc05",
+        "android_client_info": {
+          "package_name": "com.unblu.ucallproto"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1091266526048-o1bva1v2h8jt601c0uh5vgto5edb2e7l.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.unblu.ucallproto",
+            "certificate_hash": "f5fb3bbb416b225cea705274c06c61f4246cea24"
+          }
+        },
+        {
+          "client_id": "1091266526048-h9au3rdjhn2vdl53sgqqc6kf85c51s4t.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAndVFKjNUUTXf1NUwzW_Zf-GVzaHfkPnY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1091266526048-h9au3rdjhn2vdl53sgqqc6kf85c51s4t.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1091266526048-0t2obj172f4hulnocmuitoj9ror8vv3g.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.unblu.prototype.VisitorTestApp"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1091266526048:android:491b74d3f491fb20d1bc05",
+        "android_client_info": {
+          "package_name": "com.unblu.uvisitor"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1091266526048-omtbupom43r0rq8mdkpstmrifbfnidkc.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.unblu.uvisitor",
+            "certificate_hash": "f5fb3bbb416b225cea705274c06c61f4246cea24"
+          }
+        },
+        {
+          "client_id": "1091266526048-h9au3rdjhn2vdl53sgqqc6kf85c51s4t.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAndVFKjNUUTXf1NUwzW_Zf-GVzaHfkPnY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1091266526048-h9au3rdjhn2vdl53sgqqc6kf85c51s4t.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1091266526048-0t2obj172f4hulnocmuitoj9ror8vv3g.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.unblu.prototype.VisitorTestApp"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1091266526048:android:eff6e6f753523d3cd1bc05",
+        "android_client_info": {
+          "package_name": "ubp.com.main.ev1.debug"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1091266526048-q5hpfivam11chh7e3g4gkgeovrrr29c7.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "ubp.com.main.ev1.debug",
+            "certificate_hash": "97541e0730ba797f774f3da36df4a0ac7d28bd27"
+          }
+        },
+        {
+          "client_id": "1091266526048-h9au3rdjhn2vdl53sgqqc6kf85c51s4t.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAndVFKjNUUTXf1NUwzW_Zf-GVzaHfkPnY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1091266526048-h9au3rdjhn2vdl53sgqqc6kf85c51s4t.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1091266526048-0t2obj172f4hulnocmuitoj9ror8vv3g.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.unblu.prototype.VisitorTestApp"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
