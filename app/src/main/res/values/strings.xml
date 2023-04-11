@@ -1,3 +1,23 @@
 <resources>
     <string name="app_name">Brandeable Agent App</string>
+
+    <!-- Login Screen -->
+    <string name="login_button">Login</string>
+    <string name="login_screen_sso_text">Single Sign-On</string>
+    <string name="login_screen_sso_button">Login with SSO</string>
+    <string name="login_screen_loggin_in">Logging in</string>
+    <string name="login_username_label">Username</string>
+    <string name="login_password_label">Password</string>
+    <string name="login_subtitle">Login text here Login text here Login text here </string>
+    <string name="login_button_logging_in">Logging in..</string>
+
+    <!-- Snackbar error message -->
+    <string name="login_error_message">Login failed. Please try again.</string>
+
+    <!-- Logout confirmation dialog -->
+    <string name="logout_confirmation_title">Confirm Logout</string>
+    <string name="logout_confirmation_message">Are you sure you want to log out?</string>
+    <string name="logout_confirmation_positive">Yes</string>
+    <string name="logout_confirmation_negative">Cancel</string>
+
 </resources>

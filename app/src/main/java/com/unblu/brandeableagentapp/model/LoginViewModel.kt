@@ -24,6 +24,8 @@ class LoginViewModel : ViewModel() {
     val navigationState: StateFlow<NavigationState?> = _navigationState
     val _loginState= MutableStateFlow<LoginState>(LoginState.LoggedOut)
     val loginState: StateFlow<LoginState> = _loginState
+    val _passwordVisiblity= MutableStateFlow(false)
+    val passwordVisiblity: StateFlow<Boolean> = _passwordVisiblity
     val resources = CompositeDisposable()
 
     init {
@@ -103,6 +105,12 @@ class LoginViewModel : ViewModel() {
                 _loginState.emit(LoginState.LoggedOut)
                 _navigationState.emit( null)
             }
+        }
+    }
+
+    fun setPasswordVisiblity(show: Boolean) {
+        viewModelScope.launch {
+            _passwordVisiblity.emit(show)
         }
     }
 }

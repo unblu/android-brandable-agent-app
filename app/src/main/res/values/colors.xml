@@ -7,4 +7,38 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+
+    <color name="colorPrimary">#F8522f
+</color>
+    <color name="colorPrimaryVariant">#3700B3</color>
+    <color name="colorSecondary">#03DAC6</color>
+    <color name="colorSecondaryVariant">#018786</color>
+    <color name="colorBackground">#FFFFFF</color>
+    <color name="colorSurface">#FFFFFF</color>
+    <color name="colorError">#B00020</color>
+    <color name="colorOnPrimary">#FFFFFF</color>
+    <color name="colorOnSecondary">#000000</color>
+    <color name="colorOnBackground">#000000</color>
+    <color name="colorOnSurface">#000000</color>
+    <color name="colorOnError">#FFFFFF</color>
+
+    <!-- Customizable colors -->
+    <color name="splash_screen_background">#F8522f</color>
+    <!-- Login colors -->
+    <color name="login_screen_background">#FFFFFF</color>
+    <color name="login_button_background">#F8522f
+</color>
+    <color name="login_button_text">#FFFFFF</color>
+    <color name="login_input_text">#7E85B1</color>
+    <color name="login_label_text">#636670</color>
+    <color name="input_background_color">#FFFFFF</color>
+    <color name="input_border_color">#C7C8CE</color>
+    <color name="login_screen_sso_button_background">#FFFFFF</color>
+    <color name="login_screen_sso_button_text">#FFFFFF</color>
+    <color name="password_visible_button">#7E85B1</color>
+
+    <!-- Error SnackBar colors -->
+    <color name="error_snackbar_background">#B00020</color>
+    <color name="error_snackbar_text">#FFFFFF</color>
+    <color name="progress_color">#FFFFFF</color>
 </resources>
