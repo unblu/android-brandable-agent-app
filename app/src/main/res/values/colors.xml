@@ -26,16 +26,24 @@
     <color name="splash_screen_background">#F8522f</color>
     <!-- Login colors -->
     <color name="login_screen_background">#FFFFFF</color>
-    <color name="login_button_background">#F8522f
-</color>
+    <color name="login_button_background">#F8522f</color>
+    <color name="login_sso_toolbar_background">#F8522f</color>
     <color name="login_button_text">#FFFFFF</color>
+    <color name="login_button_border">#FF5722</color>
+    <color name="login_screen_sso_button_background">#FF5722</color>
+    <color name="login_screen_sso_button_text">#FFFFFF</color>
+    <color name="input_border_color">#C7C8CE</color>
     <color name="login_input_text">#7E85B1</color>
     <color name="login_label_text">#636670</color>
     <color name="input_background_color">#FFFFFF</color>
-    <color name="input_border_color">#C7C8CE</color>
-    <color name="login_screen_sso_button_background">#FFFFFF</color>
-    <color name="login_screen_sso_button_text">#FFFFFF</color>
     <color name="password_visible_button">#7E85B1</color>
+
+    <!-- Other colors -->
+    <color name="alert_dialog_background">#FFFFFF</color>
+    <color name="alert_dialog_confirm_text">#2196F3</color>
+    <color name="alert_dialog_cancel_text">#FF5722</color>
+    <color name="alert_dialog_title">#212121</color>
+    <color name="alert_dialog_text">#757575</color>
 
     <!-- Error SnackBar colors -->
     <color name="error_snackbar_background">#B00020</color>

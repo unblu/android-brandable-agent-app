@@ -3,7 +3,9 @@ package com.unblu.brandeableagentapp.ui
 import android.app.Activity
 import android.util.Log
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Visibility
@@ -48,6 +50,7 @@ fun LoginScreen(navController: NavHostController, viewModel: LoginViewModel) {
     val buttonTextColor = colorResource(id = R.color.login_button_text)
     val inputTextColor = colorResource(id = R.color.login_input_text)
     val progressIndicatorColor = colorResource(id = R.color.progress_color)
+    val buttonBorderColor = colorResource(id = R.color.login_button_border)
 
     Surface(color = backgroundColor) {
         Column(
@@ -131,10 +134,10 @@ fun LoginScreen(navController: NavHostController, viewModel: LoginViewModel) {
                                         backgroundColor = buttonBackgroundColor,
                                         contentColor = buttonTextColor
                                     ),
-                                    enabled = false,
                                     modifier = Modifier
                                         .fillMaxWidth()
                                         .height(inputAndButtonHeight)
+                                        .border(1.dp, buttonBorderColor, shape = RoundedCornerShape(4.dp))
                                 ) {
                                     CircularProgressIndicator(
                                         modifier = Modifier
@@ -156,6 +159,7 @@ fun LoginScreen(navController: NavHostController, viewModel: LoginViewModel) {
                                     modifier = Modifier
                                         .fillMaxWidth()
                                         .height(inputAndButtonHeight)
+                                        .border(1.dp, buttonBorderColor, shape = RoundedCornerShape(4.dp))
                                 ) {
                                     Text(stringResource(R.string.login_button))
                                 }

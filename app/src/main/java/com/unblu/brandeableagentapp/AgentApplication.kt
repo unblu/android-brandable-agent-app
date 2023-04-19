@@ -10,7 +10,7 @@ class AgentApplication : UnbluApplication(){
 
     override fun onCreate() {
         super.onCreate()
-        Unblu.setLogLevel(LogLevel.DEBUG)
+        Unblu.setLogLevel(LogLevel.WARN)
         Unblu.onUiVisibilityRequest()
             .subscribe {
                 unbluController.setRequestedUiShow()

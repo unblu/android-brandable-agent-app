@@ -16,3 +16,4 @@ dependencyResolutionManagement {
 }*/
 rootProject.name = "Brandeable Agent App"
 include ':app'
+includeBuild("../sdk-android")

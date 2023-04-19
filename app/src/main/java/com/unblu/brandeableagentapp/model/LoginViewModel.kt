@@ -3,30 +3,84 @@ package com.unblu.brandeableagentapp.model
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.unblu.brandeableagentapp.login.LoginHelper
 import com.unblu.brandeableagentapp.api.UnbluController
-import com.unblu.brandeableagentapp.login.util.validatePassword
-import com.unblu.brandeableagentapp.login.util.validateUsername
+import com.unblu.brandeableagentapp.data.AppConfiguration
+import com.unblu.brandeableagentapp.login.direct.LoginHelper
+import com.unblu.brandeableagentapp.login.direct.util.validatePassword
+import com.unblu.brandeableagentapp.login.direct.util.validateUsername
+import com.unblu.brandeableagentapp.login.proxy.ProxyWebViewClient
 import com.unblu.sdk.core.Unblu
 import com.unblu.sdk.core.callback.InitializeExceptionCallback
 import com.unblu.sdk.core.configuration.UnbluClientConfiguration
+import com.unblu.sdk.core.configuration.UnbluCookie
 import com.unblu.sdk.core.errortype.UnbluClientErrorType
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
-import kotlin.math.log
 
 class LoginViewModel : ViewModel() {
     private lateinit var unbluController: UnbluController
     private val _navigationState = MutableStateFlow<NavigationState?>(null)
     val navigationState: StateFlow<NavigationState?> = _navigationState
-    val _loginState= MutableStateFlow<LoginState>(LoginState.LoggedOut)
+    private val _loginState= MutableStateFlow<LoginState>(LoginState.LoggedOut)
     val loginState: StateFlow<LoginState> = _loginState
-    val _passwordVisiblity= MutableStateFlow(false)
+    private val resources = CompositeDisposable()
+    private val _customTabsOpen = MutableStateFlow(false)
+    val customTabsOpen: StateFlow<Boolean> = _customTabsOpen
+
+    private val _showWebview = MutableStateFlow(false)
+    val showWebview: StateFlow<Boolean> = _showWebview
+
+    private val _authType = MutableStateFlow(AppConfiguration.authType)
+    val authType: StateFlow<AppConfiguration.AuthenticationType> = _authType
+
+    //Direct login
+    private val _passwordVisiblity= MutableStateFlow(false)
     val passwordVisiblity: StateFlow<Boolean> = _passwordVisiblity
-    val resources = CompositeDisposable()
+
+    //SSO proxy login
+    val onCookieReceived :(Set<UnbluCookie>?) -> Unit = { cookies->
+        startUnblu(cookies)
+    }
+
+    private fun startUnblu(cookies: Set<UnbluCookie>?) {
+        cookies?.let {
+            val config = UnbluClientConfiguration.Builder(unbluController.getConfiguration())
+                .setCustomCookies(cookies).build()
+            unbluController.start(config, {
+                viewModelScope.launch {
+                    _loginState.emit(LoginState.LoggedIn)
+                    _navigationState.emit(NavigationState.Success(it.mainView))
+                }
+            }, object : InitializeExceptionCallback {
+                override fun onConfigureNotCalled() {
+                    _navigationState.value =
+                        NavigationState.Failure("Error message: onConfigureNotCalled")
+                    resetSSOLogin()
+                }
+
+                override fun onInErrorState() {
+                    _navigationState.value =
+                        NavigationState.Failure("Error message: onInErrorState")
+                    resetSSOLogin()
+                }
+
+                override fun onInitFailed(
+                    errorType: UnbluClientErrorType,
+                    details: String?
+                ) {
+                    _navigationState.value = NavigationState.Failure("Error message: $details")
+                    resetSSOLogin()
+                }
+            })
+        } ?: kotlin.run {
+            _navigationState.value =
+                NavigationState.Failure("Error message: No authorizaton returned from login")
+            resetSSOLogin()
+        }
+    }
 
     init {
         resources.add(Unblu.onError().subscribe {
@@ -37,6 +91,7 @@ class LoginViewModel : ViewModel() {
             }
         })
     }
+
     fun login(username: String, password: String) {
         if(loginState.value.isLoggingIn()) return
         val user = validateUsername(username)
@@ -47,32 +102,7 @@ class LoginViewModel : ViewModel() {
             viewModelScope.launch {
                 _loginState.emit(LoginState.LoggingIn)
                 LoginHelper.login(unbluController.getConfiguration(),username, password, { cookies->
-                    cookies?.let {
-                        val config  =  UnbluClientConfiguration.Builder(unbluController.getConfiguration()).setCustomCookies(cookies).build()
-                        unbluController.start(config, {
-                            viewModelScope.launch {
-                                _loginState.emit(LoginState.LoggedIn)
-                                _navigationState.emit(NavigationState.Success(it.mainView))
-                            }
-                        },object :InitializeExceptionCallback{
-                            override fun onConfigureNotCalled() {
-                                _navigationState.value = NavigationState.Failure("Error message: onConfigureNotCalled")
-                            }
-
-                            override fun onInErrorState() {
-                                _navigationState.value = NavigationState.Failure("Error message: onInErrorState")
-                            }
-
-                            override fun onInitFailed(
-                                errorType: UnbluClientErrorType,
-                                details: String?
-                            ) {
-                                _navigationState.value = NavigationState.Failure("Error message: $details")
-                            }
-                        })
-                    } ?: kotlin.run {
-                        _navigationState.value = NavigationState.Failure("Error message: No authorizaton returned from login")
-                    }
+                    startUnblu(cookies)
                 },{ error->
                     _navigationState.value = NavigationState.Failure("Error message: $error")
                 })
@@ -80,13 +110,12 @@ class LoginViewModel : ViewModel() {
         }
     }
 
-    fun loginSSO() {
+    fun launchSSO() {
         viewModelScope.launch {
-            // Implement your SSO login process here
-            // On success:
-            //_navigationState.value = NavigationState.Success
-            // On failure:
-            _navigationState.value = NavigationState.Failure("Error message")
+            if(authType.value is AppConfiguration.AuthenticationType.OAuth)
+                _customTabsOpen.emit(true)
+            else
+                _showWebview.emit(true)
         }
     }
 
@@ -102,8 +131,7 @@ class LoginViewModel : ViewModel() {
     fun stopUnblu() {
         unbluController.stop {
             viewModelScope.launch {
-                _loginState.emit(LoginState.LoggedOut)
-                _navigationState.emit( null)
+                doResetLoginState()
             }
         }
     }
@@ -111,6 +139,19 @@ class LoginViewModel : ViewModel() {
     fun setPasswordVisiblity(show: Boolean) {
         viewModelScope.launch {
             _passwordVisiblity.emit(show)
+        }
+    }
+
+    private suspend fun doResetLoginState() {
+            _navigationState.emit( null)
+            _loginState.emit(LoginState.LoggedOut)
+    }
+
+    fun resetSSOLogin() {
+        viewModelScope.launch {
+            _customTabsOpen.emit(false)
+            _showWebview.emit(false)
+            _navigationState.emit(null)
         }
     }
 }

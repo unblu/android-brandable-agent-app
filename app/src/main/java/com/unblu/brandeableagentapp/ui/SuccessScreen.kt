@@ -1,21 +1,22 @@
 package com.unblu.brandeableagentapp.ui
 
 import android.annotation.SuppressLint
+import android.os.Build
 import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import android.widget.RelativeLayout
+import androidx.activity.compose.BackHandler
+import androidx.compose.foundation.focusable
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material.AlertDialog
-import androidx.compose.material.Text
-import androidx.compose.material.TextButton
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.navigation.NavController
-import androidx.navigation.NavHostController
+import com.unblu.brandeableagentapp.R
 import com.unblu.brandeableagentapp.model.UnbluScreenViewModel
-import com.unblu.sdk.core.Unblu
+import com.unblu.sdk.core.callback.ui.UnbluNavUtil
 
 @SuppressLint("ServiceCast")
 @Composable
@@ -28,33 +29,66 @@ fun SuccessScreen(
     val showDialog by viewModel.showDialog
     val unbluView by viewModel.mainView
 
-    AndroidView(modifier = Modifier.fillMaxSize(), factory = {
+    AndroidView(modifier = Modifier
+        .fillMaxSize()
+        .focusable(true)
+        , factory = {
         unbluView?.detachView()
+        unbluView?.apply { configView (this) }
         unbluView?: RelativeLayout(it)
     })
 
     if (showDialog) {
-        AlertDialog(
-            onDismissRequest = { viewModel.setShowDialog(false) },
-            title = { Text("Logout") },
-            text = { Text("Are you sure you want to logout?") },
-            confirmButton = {
-                TextButton(onClick = {
-                    onNavigateBack()
-                    unbluView?.detachView()
-                    navController.navigate("login")
-                }) {
-                    Text("Yes")
-                }
-            },
-            dismissButton = {
-                TextButton(onClick = { viewModel.setShowDialog(false) }) {
-                    Text("No")
-                }
-            }
+        CustomAlertDialog(
+            onCancel = { viewModel.setShowDialog(false) },
+            title =  stringResource(id = R.string.logout_confirmation_title),
+            message = stringResource(id = R.string.logout_confirmation_message),
+            cancelText = stringResource(id = R.string.logout_confirmation_negative),
+            confirmText = stringResource(id = R.string.logout_confirmation_positive),
+             onConfirm = {
+                    goBack(onNavigateBack,unbluView,navController)
+                },
+            alertDialogColors = AlertDialogColorDefaults.alertDialogColors()
         )
     }
 
+    BackHandler() {
+        unbluView?.let {
+            UnbluNavUtil.getUnbluNav(unbluView)?.goBack { didGoBack->
+                if(!didGoBack){
+                    viewModel.setShowDialog(true)
+                }
+            }
+        } ?: run {
+            goBack(onNavigateBack, unbluView, navController)
+        }
+    }
+
+    LaunchedEffect(viewModel) {
+        viewModel.sessionEnded.collect {
+            goBack(onNavigateBack,unbluView,navController)
+        }
+    }
+
+}
+
+private fun goBack(
+    onNavigateBack: () -> Unit,
+    unbluView: View?,
+    navController: NavController
+) {
+    Log.w("SuccessScreen", "will go back")
+    onNavigateBack()
+    unbluView?.detachView()
+    navController.navigate("login")
+}
+
+fun configView(unbluView: View) {
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+        unbluView.isFocusable = true
+    }
+    unbluView.isFocusableInTouchMode = true
+    unbluView.requestFocus()
 }
 
 private fun View.detachView() {

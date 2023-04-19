@@ -18,6 +18,6 @@
     <string name="logout_confirmation_title">Confirm Logout</string>
     <string name="logout_confirmation_message">Are you sure you want to log out?</string>
     <string name="logout_confirmation_positive">Yes</string>
-    <string name="logout_confirmation_negative">Cancel</string>
+    <string name="logout_confirmation_negative">No</string>
 
 </resources>

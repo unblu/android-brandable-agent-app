@@ -2,8 +2,10 @@ package com.unblu.brandeableagentapp.api
 
 import android.app.Application
 import android.content.Context
+import android.content.res.Configuration
 import android.util.Log
 import android.view.View
+import com.unblu.brandeableagentapp.data.AppConfiguration
 import com.unblu.sdk.core.Unblu
 import com.unblu.sdk.core.agent.UnbluAgentClient
 import com.unblu.sdk.core.callback.InitializeExceptionCallback
@@ -11,9 +13,7 @@ import com.unblu.sdk.core.callback.InitializeSuccessCallback
 import com.unblu.sdk.core.configuration.UnbluClientConfiguration
 import com.unblu.sdk.core.configuration.UnbluDownloadHandler
 import com.unblu.sdk.core.configuration.UnbluPreferencesStorage
-import com.unblu.sdk.core.internal.visitor.TAG
 import com.unblu.sdk.core.links.UnbluPatternMatchingExternalLinkHandler
-import com.unblu.sdk.core.model.BackButtonPressTriggerEvent
 import com.unblu.sdk.core.notification.UnbluNotificationApi
 import com.unblu.sdk.module.call.CallModule
 import com.unblu.sdk.module.call.CallModuleProvider
@@ -23,6 +23,7 @@ import com.unblu.sdk.module.mobilecobrowsing.MobileCoBrowsingModuleProvider
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.subjects.BehaviorSubject
 import java.util.*
+import java.util.regex.Pattern
 
 class UnbluController(var agentApplication: Context) {
     private var unbluClientConfiguration: UnbluClientConfiguration
@@ -67,6 +68,7 @@ class UnbluController(var agentApplication: Context) {
             unbluNotificationApi,
             {
                 agentClient = it
+
                 successCallback.onSuccess(it)
             },
             initializeExceptionCallback
@@ -74,19 +76,17 @@ class UnbluController(var agentApplication: Context) {
     }
 
     private fun createUnbluClientConfiguration (uApplication: Context): UnbluClientConfiguration {
-        val url = "https://testing7.dev.unblu-test.com"
-        val apiKey = "MZsy5sFESYqU7MawXZgR_w"
         unbluPreferencesStorage = UnbluPreferencesStorage.createSharedPreferencesStorage(agentApplication)
         callModule = CallModuleProvider.create()
         coBrowsingModule = MobileCoBrowsingModuleProvider.create()
         return UnbluClientConfiguration.Builder(
-            url,
-            apiKey,
+            AppConfiguration.unbluServerUrl,
+            AppConfiguration.unbluApiKey,
             unbluPreferencesStorage,
             UnbluDownloadHandler.createExternalStorageDownloadHandler(uApplication as Application),
             UnbluPatternMatchingExternalLinkHandler()
         )
-            .setEntryPath("/co-unblu")
+            .setInternalUrlPatternWhitelist(listOf(Pattern.compile("https://agent-sso-trusted\\.cloud\\.unblu-env\\.com")))
             .registerModule(callModule)
             .registerModule(coBrowsingModule).build()
     }

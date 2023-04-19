@@ -5,11 +5,12 @@
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  */
-package com.unblu.brandeableagentapp.login
+package com.unblu.brandeableagentapp.login.direct
 
 import android.net.Uri
 import android.webkit.ValueCallback
 import androidx.core.util.Pair
+import com.unblu.brandeableagentapp.login.LoginFailedException
 import com.unblu.sdk.core.configuration.UnbluClientConfiguration
 import com.unblu.sdk.core.configuration.UnbluCookie
 import com.unblu.sdk.core.internal.utils.CookieUtils
@@ -42,7 +43,7 @@ object LoginHelper {
         configuration: UnbluClientConfiguration,
         loginUsername: String?,
         loginPassword: String?,
-        success: ValueCallback<Set<UnbluCookie?>?>,
+        success: ValueCallback<Set<UnbluCookie>?>,
         failure: ValueCallback<String?>
     ) {
         if (loginUsername == null || loginPassword == null) {
@@ -100,7 +101,7 @@ object LoginHelper {
                         )
                         failure.onReceiveValue(result.second!!.message)
                     } else {
-                        success.onReceiveValue(result.first as Set<UnbluCookie?>?)
+                        success.onReceiveValue(result.first as Set<UnbluCookie>?)
                     }
                     if (loginConnection[0] != null) {
                         loginConnection[0]!!.disconnect()
