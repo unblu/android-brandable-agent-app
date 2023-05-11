@@ -10,6 +10,7 @@
 
     <application
         android:name=".AgentApplication"
+        android:launchMode="singleInstance"
         android:allowBackup="false"
         android:fullBackupContent="@xml/backup_rules"
         android:icon="@mipmap/ic_launcher"
@@ -22,8 +23,7 @@
         <activity
             android:name=".MainActivity"
             android:exported="true"
-            android:label="@string/app_name"
-            android:launchMode="singleInstance"
+            android:launchMode="singleTop"
             android:theme="@style/Theme.BrandeableAgentApp">
 
             <!--OAuth intent filter-->
@@ -33,7 +33,7 @@
                 <category android:name="android.intent.category.BROWSABLE" />
                 <data android:scheme="${appAuthRedirectScheme}"
                     android:host="${appAuthRedirectHost}"
-                    android:pathPrefix="${appAuthRedirectPath}" />
+                    android:path="${appAuthRedirectPath}"/>
             </intent-filter>
 
             <intent-filter>

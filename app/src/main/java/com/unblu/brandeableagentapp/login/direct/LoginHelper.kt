@@ -37,7 +37,7 @@ import kotlin.Throws
 import kotlin.arrayOf
 
 object LoginHelper {
-    private val UNBLU_REST_PATH: String = "/rest/v3"
+    private const val  UNBLU_REST_PATH: String = "/rest/v3"
     private val TAG = LoginHelper::class.java.simpleName
     fun login(
         configuration: UnbluClientConfiguration,

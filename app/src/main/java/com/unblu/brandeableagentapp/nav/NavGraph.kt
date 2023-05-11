@@ -13,6 +13,7 @@ import com.google.accompanist.navigation.animation.composable
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import com.unblu.brandeableagentapp.BuildConfig
 import com.unblu.brandeableagentapp.data.AppConfiguration
+import com.unblu.brandeableagentapp.model.AuthenticationType
 import com.unblu.brandeableagentapp.model.LoginViewModel
 import com.unblu.brandeableagentapp.model.UnbluScreenViewModel
 import com.unblu.brandeableagentapp.ui.*
@@ -31,7 +32,7 @@ fun NavGraph(navController: NavHostController, viewModelStore: ViewModelProvider
             SplashScreen(navController)
         }
         composable("login", enterTransition = { fadeIn() }, exitTransition = { fadeOut() }) {
-            if (AppConfiguration.authType !is AppConfiguration.AuthenticationType.Direct) {
+            if (AppConfiguration.authType !is AuthenticationType.Direct) {
                 LoginScreenSSO(navController, loginViewModel)
             } else {
                 LoginScreen(navController, loginViewModel)
@@ -42,6 +43,9 @@ fun NavGraph(navController: NavHostController, viewModelStore: ViewModelProvider
                 loginViewModel.stopUnblu()
                 successViewModel.setShowDialog(false)
             }
+        }
+        composable("settings", enterTransition = { fadeIn() }, exitTransition = { fadeOut() }) {
+            SettingsScreen(navController)
         }
     }
 }

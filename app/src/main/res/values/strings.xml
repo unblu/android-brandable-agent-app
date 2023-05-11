@@ -8,7 +8,7 @@
     <string name="login_screen_loggin_in">Logging in</string>
     <string name="login_username_label">Username</string>
     <string name="login_password_label">Password</string>
-    <string name="login_subtitle">Login text here Login text here Login text here </string>
+    <string name="login_subtitle">Unblu makes U happy!</string>
     <string name="login_button_logging_in">Logging in..</string>
 
     <!-- Snackbar error message -->
@@ -19,5 +19,6 @@
     <string name="logout_confirmation_message">Are you sure you want to log out?</string>
     <string name="logout_confirmation_positive">Yes</string>
     <string name="logout_confirmation_negative">No</string>
+    <string name="login_aborted">Login Process Aborted</string>
 
 </resources>

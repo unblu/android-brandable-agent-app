@@ -20,15 +20,14 @@ android {
         }
 
         manifestPlaceholders = [
-                appAuthRedirectScheme: "https",
-                appAuthRedirectHost: "agent-sso-trusted.cloud.unblu-env.com",
-                appAuthRedirectPath: "/oauth2/callback"
+                appAuthRedirectScheme: "msauth",
+                appAuthRedirectHost: "com.unblu.brandeableagentapp",
+                appAuthRedirectPath: "9fs7u0FrIlzqcFJ0wGxh9CRs6iQ%3D"
         ]
     }
 
     buildTypes {
         debug {
-            buildConfigField "Boolean", "IS_SSO", "true"
         }
         release {
             minifyEnabled false
@@ -79,6 +78,10 @@ dependencies {
     implementation "com.google.accompanist:accompanist-flowlayout:0.31.0-alpha"
     implementation "com.google.accompanist:accompanist-navigation-animation:0.31.0-alpha"
     implementation"androidx.compose.material:material-icons-extended:1.4.1"
+
+    implementation 'androidx.work:work-runtime:2.7.1'
+    implementation 'androidx.work:work-rxjava3:2.7.1'
+
 
     //UNBLU
     /*implementation 'com.unblu.mobile-sdk-android:coresdk:4.5.5'

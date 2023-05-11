@@ -1,10 +1,9 @@
 package com.unblu.brandeableagentapp.api
 
 import android.app.Application
-import android.content.Context
-import android.content.res.Configuration
 import android.util.Log
 import android.view.View
+import com.unblu.brandeableagentapp.AgentApplication
 import com.unblu.brandeableagentapp.data.AppConfiguration
 import com.unblu.sdk.core.Unblu
 import com.unblu.sdk.core.agent.UnbluAgentClient
@@ -23,15 +22,13 @@ import com.unblu.sdk.module.mobilecobrowsing.MobileCoBrowsingModuleProvider
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.subjects.BehaviorSubject
 import java.util.*
-import java.util.regex.Pattern
 
-class UnbluController(var agentApplication: Context) {
-    private var unbluClientConfiguration: UnbluClientConfiguration
-    private lateinit var unbluPreferencesStorage: UnbluPreferencesStorage
-
-    init {
-        unbluClientConfiguration = createUnbluClientConfiguration(agentApplication)
-    }
+class UnbluController(
+    var agentApplication: AgentApplication
+) {
+    private val unbluDownloadHandler: UnbluDownloadHandler = UnbluDownloadHandler.createExternalStorageDownloadHandler(agentApplication)
+    private var unbluClientConfiguration: UnbluClientConfiguration = createUnbluClientConfiguration()
+    private val unbluPreferencesStorage: UnbluPreferencesStorage = agentApplication.getUnbluPrefs()
 
     companion object {
         const val PREFERENCES = "TestApp"
@@ -75,18 +72,17 @@ class UnbluController(var agentApplication: Context) {
         )
     }
 
-    private fun createUnbluClientConfiguration (uApplication: Context): UnbluClientConfiguration {
-        unbluPreferencesStorage = UnbluPreferencesStorage.createSharedPreferencesStorage(agentApplication)
+    private fun createUnbluClientConfiguration (): UnbluClientConfiguration {
         callModule = CallModuleProvider.create()
         coBrowsingModule = MobileCoBrowsingModuleProvider.create()
         return UnbluClientConfiguration.Builder(
             AppConfiguration.unbluServerUrl,
             AppConfiguration.unbluApiKey,
-            unbluPreferencesStorage,
-            UnbluDownloadHandler.createExternalStorageDownloadHandler(uApplication as Application),
+            agentApplication.getUnbluPrefs(),
+            unbluDownloadHandler,
             UnbluPatternMatchingExternalLinkHandler()
         )
-            .setInternalUrlPatternWhitelist(listOf(Pattern.compile("https://agent-sso-trusted\\.cloud\\.unblu-env\\.com")))
+            .setEntryPath(AppConfiguration.entryPath)
             .registerModule(callModule)
             .registerModule(coBrowsingModule).build()
     }
@@ -147,5 +143,9 @@ class UnbluController(var agentApplication: Context) {
             })
         } ?: run(onStopped)
         agentClient = null
+    }
+
+    fun setAccessToken(token: String) {
+        unbluClientConfiguration = UnbluClientConfiguration.Builder(unbluClientConfiguration).setAccessToken(token).build();
     }
 }

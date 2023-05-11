@@ -4,7 +4,6 @@ import android.app.Activity
 import android.util.Log
 import android.webkit.WebView
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.Image
@@ -34,19 +33,18 @@ import androidx.navigation.compose.rememberNavController
 import com.unblu.brandeableagentapp.R
 import com.unblu.brandeableagentapp.data.AppConfiguration
 import com.unblu.brandeableagentapp.login.proxy.ProxyWebViewClient
+import com.unblu.brandeableagentapp.model.AuthenticationType
 import com.unblu.brandeableagentapp.model.LoginState
 import com.unblu.brandeableagentapp.model.LoginViewModel
 import com.unblu.brandeableagentapp.model.NavigationState
 import com.unblu.brandeableagentapp.util.CookieUtil
 
-@OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun LoginScreenSSO(navController: NavHostController, viewModel: LoginViewModel) {
     val snackbarHostState = remember { SnackbarHostState() }
     val backgroundColor = colorResource(id = R.color.login_screen_background)
     val showSSOWebView by viewModel.customTabsOpen.collectAsState()
     val showWebview by viewModel.showWebview.collectAsState()
-
     val toolbarColor = colorResource(id = R.color.login_sso_toolbar_background)
 
 
@@ -57,6 +55,7 @@ fun LoginScreenSSO(navController: NavHostController, viewModel: LoginViewModel) 
                 LoginUI(viewModel)
             }
         }
+        else if(AppConfiguration.authType is AuthenticationType.WebProxy)
             AnimatedVisibility(
                 visible = showWebview,
                 enter = slideInVertically(initialOffsetY = { it }),

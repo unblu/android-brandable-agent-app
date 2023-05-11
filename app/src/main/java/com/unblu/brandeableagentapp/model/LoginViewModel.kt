@@ -24,7 +24,7 @@ class LoginViewModel : ViewModel() {
     private lateinit var unbluController: UnbluController
     private val _navigationState = MutableStateFlow<NavigationState?>(null)
     val navigationState: StateFlow<NavigationState?> = _navigationState
-    private val _loginState= MutableStateFlow<LoginState>(LoginState.LoggedOut)
+    private val _loginState = MutableStateFlow<LoginState>(LoginState.LoggedOut)
     val loginState: StateFlow<LoginState> = _loginState
     private val resources = CompositeDisposable()
     private val _customTabsOpen = MutableStateFlow(false)
@@ -34,52 +34,53 @@ class LoginViewModel : ViewModel() {
     val showWebview: StateFlow<Boolean> = _showWebview
 
     private val _authType = MutableStateFlow(AppConfiguration.authType)
-    val authType: StateFlow<AppConfiguration.AuthenticationType> = _authType
+    val authType: StateFlow<AuthenticationType> = _authType
 
     //Direct login
-    private val _passwordVisiblity= MutableStateFlow(false)
+    private val _passwordVisiblity = MutableStateFlow(false)
     val passwordVisiblity: StateFlow<Boolean> = _passwordVisiblity
 
     //SSO proxy login
-    val onCookieReceived :(Set<UnbluCookie>?) -> Unit = { cookies->
+    val onCookieReceived: (Set<UnbluCookie>?) -> Unit = { cookies ->
         startUnblu(cookies)
     }
 
-    private fun startUnblu(cookies: Set<UnbluCookie>?) {
-        cookies?.let {
-            val config = UnbluClientConfiguration.Builder(unbluController.getConfiguration())
-                .setCustomCookies(cookies).build()
-            unbluController.start(config, {
-                viewModelScope.launch {
-                    _loginState.emit(LoginState.LoggedIn)
-                    _navigationState.emit(NavigationState.Success(it.mainView))
-                }
-            }, object : InitializeExceptionCallback {
-                override fun onConfigureNotCalled() {
-                    _navigationState.value =
-                        NavigationState.Failure("Error message: onConfigureNotCalled")
-                    resetSSOLogin()
-                }
-
-                override fun onInErrorState() {
-                    _navigationState.value =
-                        NavigationState.Failure("Error message: onInErrorState")
-                    resetSSOLogin()
-                }
-
-                override fun onInitFailed(
-                    errorType: UnbluClientErrorType,
-                    details: String?
-                ) {
-                    _navigationState.value = NavigationState.Failure("Error message: $details")
-                    resetSSOLogin()
-                }
-            })
-        } ?: kotlin.run {
-            _navigationState.value =
-                NavigationState.Failure("Error message: No authorizaton returned from login")
-            resetSSOLogin()
+    fun startUnblu(cookies: Set<UnbluCookie>?) {
+        viewModelScope.launch {
+            _showWebview.emit(false)
         }
+        val config = cookies?.let {
+            UnbluClientConfiguration.Builder(unbluController.getConfiguration())
+                .setCustomCookies(cookies).build()
+        } ?: unbluController.getConfiguration()
+
+        unbluController.start(config, {
+            viewModelScope.launch {
+                _loginState.emit(LoginState.LoggedIn)
+                _navigationState.emit(NavigationState.Success(it.mainView))
+            }
+        }, object : InitializeExceptionCallback {
+            override fun onConfigureNotCalled() {
+                _navigationState.value =
+                    NavigationState.Failure("Error message: onConfigureNotCalled")
+                resetSSOLogin()
+            }
+
+            override fun onInErrorState() {
+                _navigationState.value =
+                    NavigationState.Failure("Error message: onInErrorState")
+                resetSSOLogin()
+            }
+
+            override fun onInitFailed(
+                errorType: UnbluClientErrorType,
+                details: String?
+            ) {
+                _navigationState.value = NavigationState.Failure("Error message: $details")
+                resetSSOLogin()
+            }
+        })
+
     }
 
     init {
@@ -93,26 +94,31 @@ class LoginViewModel : ViewModel() {
     }
 
     fun login(username: String, password: String) {
-        if(loginState.value.isLoggingIn()) return
+        if (loginState.value.isLoggingIn()) return
         val user = validateUsername(username)
-         if(!user || !validatePassword(password)){
-            val wrongData = if(!user) "Username" else "Password"
+        if (!user || !validatePassword(password)) {
+            val wrongData = if (!user) "Username" else "Password"
             _navigationState.value = NavigationState.Failure("Error message: Check $wrongData")
-        }else{
+        } else {
             viewModelScope.launch {
                 _loginState.emit(LoginState.LoggingIn)
-                LoginHelper.login(unbluController.getConfiguration(),username, password, { cookies->
-                    startUnblu(cookies)
-                },{ error->
-                    _navigationState.value = NavigationState.Failure("Error message: $error")
-                })
+                LoginHelper.login(
+                    unbluController.getConfiguration(),
+                    username,
+                    password,
+                    { cookies ->
+                        startUnblu(cookies)
+                    },
+                    { error ->
+                        _navigationState.value = NavigationState.Failure("Error message: $error")
+                    })
             }
         }
     }
 
     fun launchSSO() {
         viewModelScope.launch {
-            if(authType.value is AppConfiguration.AuthenticationType.OAuth)
+            if (authType.value is AuthenticationType.OAuth)
                 _customTabsOpen.emit(true)
             else
                 _showWebview.emit(true)
@@ -143,8 +149,8 @@ class LoginViewModel : ViewModel() {
     }
 
     private suspend fun doResetLoginState() {
-            _navigationState.emit( null)
-            _loginState.emit(LoginState.LoggedOut)
+        _navigationState.emit(null)
+        _loginState.emit(LoginState.LoggedOut)
     }
 
     fun resetSSOLogin() {
