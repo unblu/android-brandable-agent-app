@@ -15,6 +15,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.Center
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
@@ -35,8 +36,8 @@ import com.unblu.brandeableagentapp.model.NavigationState
 
 @Composable
 fun LoginScreen(navController: NavHostController, viewModel: LoginViewModel) {
-    val (username, onUsernameChange) = remember { mutableStateOf("superadmin") }
-    val (password, onPasswordChange) = remember { mutableStateOf("harmless-squire-spotter") }
+    val username by remember { viewModel.username }
+    val password by remember { viewModel.password }
     val snackbarHostState = remember { SnackbarHostState() }
     val loginState by viewModel.loginState.collectAsState()
     val passwordVisibility by viewModel.passwordVisiblity.collectAsState()
@@ -44,6 +45,7 @@ fun LoginScreen(navController: NavHostController, viewModel: LoginViewModel) {
     val screenHeight = LocalConfiguration.current.screenHeightDp.dp
     val inputAndButtonHeight = screenHeight * 0.060f
     val backgroundColor = colorResource(id = R.color.login_screen_background)
+    val logoColor = colorResource(id = R.color.logo_color)
     val inputBackground = colorResource(id = R.color.input_background_color)
     val borderColor = colorResource(id = R.color.input_border_color)
     val buttonBackgroundColor = colorResource(id = R.color.login_button_background)
@@ -66,7 +68,8 @@ fun LoginScreen(navController: NavHostController, viewModel: LoginViewModel) {
                 Column(Modifier.align(Center)){
                     // Logo
                     Image(
-                        painter = painterResource(id = R.mipmap.logo),
+                        painter = painterResource(id = R.drawable.logo),
+                        colorFilter = ColorFilter.tint(logoColor),
                         contentDescription = null,
                         modifier = Modifier
                             .align(CenterHorizontally)
@@ -82,27 +85,27 @@ fun LoginScreen(navController: NavHostController, viewModel: LoginViewModel) {
                 }
             }
 
-            Column(Modifier.weight(2f)) {
+            Column(Modifier.weight(3f)) {
                 // Username
                 LabeledTextField(
                     label = stringResource(R.string.login_username_label),
                     value = username,
-                    onValueChange = onUsernameChange,
-                    labelHeight = inputAndButtonHeight / 3,
+                    onValueChange = viewModel::onUsernameChange,
+                    labelHeight = inputAndButtonHeight / 2,
                     inputHeight = inputAndButtonHeight,
                     inputBackground = inputBackground,
                     borderColor = borderColor,
                     inputTextColor = inputTextColor
                 )
 
-                Spacer(modifier = Modifier.height(16.dp))
+                Spacer(modifier = Modifier.height(8.dp))
 
                 // Password
                 LabeledTextField(
                     label = stringResource(R.string.login_password_label),
                     value = password,
-                    onValueChange = onPasswordChange,
-                    labelHeight = inputAndButtonHeight / 3,
+                    onValueChange = viewModel::onPasswordChange,
+                    labelHeight = inputAndButtonHeight / 2,
                     inputHeight = inputAndButtonHeight,
                     inputBackground = inputBackground,
                     borderColor = borderColor,

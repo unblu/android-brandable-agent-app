@@ -11,7 +11,6 @@ import com.unblu.sdk.core.callback.InitializeExceptionCallback
 import com.unblu.sdk.core.callback.InitializeSuccessCallback
 import com.unblu.sdk.core.configuration.UnbluClientConfiguration
 import com.unblu.sdk.core.configuration.UnbluDownloadHandler
-import com.unblu.sdk.core.configuration.UnbluPreferencesStorage
 import com.unblu.sdk.core.links.UnbluPatternMatchingExternalLinkHandler
 import com.unblu.sdk.core.notification.UnbluNotificationApi
 import com.unblu.sdk.module.call.CallModule
@@ -28,13 +27,6 @@ class UnbluController(
 ) {
     private val unbluDownloadHandler: UnbluDownloadHandler = UnbluDownloadHandler.createExternalStorageDownloadHandler(agentApplication)
     private var unbluClientConfiguration: UnbluClientConfiguration = createUnbluClientConfiguration()
-    private val unbluPreferencesStorage: UnbluPreferencesStorage = agentApplication.getUnbluPrefs()
-
-    companion object {
-        const val PREFERENCES = "TestApp"
-        const val KEY_ACCESS_TOKEN = "ACCESS_TOKEN"
-        const val KEY_ACCESS_TOKEN_ACTIVE = "ACCESS_TOKEN_ACTIVE"
-    }
 
     //Store uiShowRequests as you may receive them when you don't have a client running
     //or the Unblu Ui isn't attached
@@ -83,13 +75,9 @@ class UnbluController(
             UnbluPatternMatchingExternalLinkHandler()
         )
             .setEntryPath(AppConfiguration.entryPath)
+            //.setInternalUrlPatternWhitelist(listOf(Pattern.compile("https://agent-sso-trusted\\.cloud\\.unblu-env\\.com")))
             .registerModule(callModule)
             .registerModule(coBrowsingModule).build()
-    }
-
-    fun isAccessTokenActive(): Boolean {
-        return unbluPreferencesStorage.get(KEY_ACCESS_TOKEN_ACTIVE)?.let { it.toBoolean() }
-            ?: false
     }
 
     fun getClient(): UnbluAgentClient? {
@@ -114,10 +102,6 @@ class UnbluController(
 
     fun hasUiShowRequest(): Observable<Boolean> {
         return onUiShowRequest
-    }
-
-    fun getHasUiShowRequestValue(): Boolean {
-        return onUiShowRequest.value!!
     }
 
     fun clearUiShowRequest() {
@@ -146,6 +130,6 @@ class UnbluController(
     }
 
     fun setAccessToken(token: String) {
-        unbluClientConfiguration = UnbluClientConfiguration.Builder(unbluClientConfiguration).setAccessToken(token).build();
+        unbluClientConfiguration = UnbluClientConfiguration.Builder(unbluClientConfiguration).setAccessToken(token).build()
     }
 }

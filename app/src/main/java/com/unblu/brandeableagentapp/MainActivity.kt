@@ -30,10 +30,12 @@ import com.unblu.sdk.core.Unblu
 import com.unblu.sdk.core.application.UnbluApplicationHelper
 import com.unblu.sdk.core.configuration.UnbluPreferencesStorage
 import com.unblu.sdk.core.errortype.UnbluClientErrorType
+import com.unblu.sdk.core.internal.utils.Logger
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import kotlinx.coroutines.launch
 import net.openid.appauth.*
 import java.util.*
+import kotlin.math.log
 
 
 class MainActivity : ComponentActivity() {
@@ -102,6 +104,15 @@ class MainActivity : ComponentActivity() {
             }
         )
         configureAuthType(loginViewModel, (application as AgentApplication).getUnbluPrefs(), (application as AgentApplication).unbluController)
+        if(unbluController.getHasUiShowRequestValueAndReset()){
+            when(AppConfiguration.authType){
+                AuthenticationType.OAuth -> openIdAuthController.startSignIn(signInLauncher)
+                AuthenticationType.WebProxy -> loginViewModel.launchSSO()
+                else-> {
+                        Logger.d("MainActivity", "Ui was requested, but direct login is required")
+                }
+            }
+        }
     }
 
     private fun configureAuthType(
@@ -109,8 +120,9 @@ class MainActivity : ComponentActivity() {
         unbluPreferencesStorage: UnbluPreferencesStorage,
         unbluController: UnbluController
     ) {
-        if (AppConfiguration.authType is AuthenticationType.OAuth) {
+        if (isOAuthTypeAuth()) {
             openIdAuthController = OpenIdAuthController(this, unbluPreferencesStorage)
+            configSignIn()
             lifecycleScope.launch {
                 openIdAuthController.eventReceived.collect { event ->
                     when (event) {
@@ -122,7 +134,7 @@ class MainActivity : ComponentActivity() {
                         }
                         is TokenEvent.ErrorReceived -> {
                             // Handle error received
-                            Log.e(MainActivity::javaClass.name, "Got token: ${event.error}")
+                            Log.e(MainActivity::javaClass.name, "Failed to receive token, will reset")
                             loginViewModel.resetSSOLogin()
                         }
                     }
@@ -130,17 +142,25 @@ class MainActivity : ComponentActivity() {
             }
 
             Log.w(MainActivity::javaClass.name, "Will register for activity result")
-            signInLauncher = registerForActivityResult(
-                ActivityResultContracts.StartActivityForResult(),
-                this::handleSignInResult
-            )
             lifecycleScope.launch {
                 loginViewModel.customTabsOpen.collect { open ->
-                    if(open)
+                    if(open) {
                         openIdAuthController.startSignIn(signInLauncher)
+                    }
                 }
             }
         }
+    }
+
+    private fun isOAuthTypeAuth() = AppConfiguration.authType is AuthenticationType.OAuth
+    private fun isDirectTypeAuth() = AppConfiguration.authType is AuthenticationType.Direct
+    private fun isWebProxyTypeAuth() = AppConfiguration.authType is AuthenticationType.WebProxy
+
+    private fun configSignIn() {
+        signInLauncher = registerForActivityResult(
+            ActivityResultContracts.StartActivityForResult(),
+            this::handleSignInResult
+        )
     }
 
     private fun handleSignInResult(result: ActivityResult) {

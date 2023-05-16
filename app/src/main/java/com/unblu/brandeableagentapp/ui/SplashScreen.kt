@@ -32,8 +32,8 @@ fun SplashScreen(navController: NavController) {
         contentAlignment = Alignment.Center
     ) {
         Image(
-            painter = painterResource(R.mipmap.logo),
-            //TODO remove this color filter
+            painter = painterResource(id = R.drawable.logo),
+            //use this color filter if you wish to change the color
             colorFilter = ColorFilter.tint(Color.White),
             contentDescription = null,
             modifier = Modifier.size(128.dp)

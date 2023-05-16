@@ -1,6 +1,7 @@
 package com.unblu.brandeableagentapp.model
 
 import android.util.Log
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.unblu.brandeableagentapp.api.UnbluController
@@ -9,6 +10,7 @@ import com.unblu.brandeableagentapp.login.direct.LoginHelper
 import com.unblu.brandeableagentapp.login.direct.util.validatePassword
 import com.unblu.brandeableagentapp.login.direct.util.validateUsername
 import com.unblu.brandeableagentapp.login.proxy.ProxyWebViewClient
+import com.unblu.brandeableagentapp.model.Storage.UNBLU_USERNAME
 import com.unblu.sdk.core.Unblu
 import com.unblu.sdk.core.callback.InitializeExceptionCallback
 import com.unblu.sdk.core.configuration.UnbluClientConfiguration
@@ -27,11 +29,15 @@ class LoginViewModel : ViewModel() {
     private val _loginState = MutableStateFlow<LoginState>(LoginState.LoggedOut)
     val loginState: StateFlow<LoginState> = _loginState
     private val resources = CompositeDisposable()
+    //oAuth
     private val _customTabsOpen = MutableStateFlow(false)
     val customTabsOpen: StateFlow<Boolean> = _customTabsOpen
-
+    //WebProxy
     private val _showWebview = MutableStateFlow(false)
     val showWebview: StateFlow<Boolean> = _showWebview
+    //Direct
+    val password = mutableStateOf("harmless-squire-spotter")
+    val username = mutableStateOf("harmless-squire-spotter")
 
     private val _authType = MutableStateFlow(AppConfiguration.authType)
     val authType: StateFlow<AuthenticationType> = _authType
@@ -87,7 +93,7 @@ class LoginViewModel : ViewModel() {
         resources.add(Unblu.onError().subscribe {
             NavigationState.Failure("Error message: Check ${it.message}")
             viewModelScope.launch {
-                delay(2000)
+                delay(500)
                 _navigationState.emit(null)
             }
         })
@@ -107,16 +113,21 @@ class LoginViewModel : ViewModel() {
                     username,
                     password,
                     { cookies ->
+                        unbluController.getConfiguration().preferencesStorage.put(UNBLU_USERNAME,username)
                         startUnblu(cookies)
                     },
                     { error ->
                         _navigationState.value = NavigationState.Failure("Error message: $error")
+                        _loginState.value = LoginState.LoggedOut
                     })
             }
         }
     }
 
     fun launchSSO() {
+        viewModelScope.launch {
+            _loginState.emit(LoginState.LoggingIn)
+        }
         viewModelScope.launch {
             if (authType.value is AuthenticationType.OAuth)
                 _customTabsOpen.emit(true)
@@ -127,6 +138,10 @@ class LoginViewModel : ViewModel() {
 
     fun setUnbluController(unbluController: UnbluController) {
         this.unbluController = unbluController
+        if(authType.value == AuthenticationType.Direct)
+            unbluController.getConfiguration().preferencesStorage.get(UNBLU_USERNAME)?.apply {
+                onUsernameChange(this)
+            }
     }
 
     override fun onCleared() {
@@ -160,6 +175,17 @@ class LoginViewModel : ViewModel() {
             _navigationState.emit(null)
         }
     }
+
+
+    fun onPasswordChange(newPassword: String) {
+        password.value = newPassword
+    }
+
+
+    fun onUsernameChange(newUsername: String) {
+        username.value = newUsername
+    }
+
 }
 
 private fun LoginState?.isLoggingIn(): Boolean {

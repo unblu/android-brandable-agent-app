@@ -1,6 +1,7 @@
 package com.unblu.brandeableagentapp.ui
 
 import android.app.Activity
+import android.graphics.Color
 import android.util.Log
 import android.webkit.WebView
 import androidx.compose.animation.AnimatedVisibility
@@ -19,6 +20,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.Center
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
@@ -43,14 +45,13 @@ import com.unblu.brandeableagentapp.util.CookieUtil
 fun LoginScreenSSO(navController: NavHostController, viewModel: LoginViewModel) {
     val snackbarHostState = remember { SnackbarHostState() }
     val backgroundColor = colorResource(id = R.color.login_screen_background)
-    val showSSOWebView by viewModel.customTabsOpen.collectAsState()
     val showWebview by viewModel.showWebview.collectAsState()
     val toolbarColor = colorResource(id = R.color.login_sso_toolbar_background)
 
 
     Box(modifier = Modifier.fillMaxSize()) {
         // Login UI
-        if (!showSSOWebView) {
+        if (!showWebview) {
             Surface(color = backgroundColor) {
                 LoginUI(viewModel)
             }
@@ -127,6 +128,7 @@ fun LoginUI(
     val buttonHeight = screenHeight * 0.060f
     val progressIndicatorColor = colorResource(id = R.color.progress_color)
     val buttonBorderColor = colorResource(id = R.color.login_button_border)
+    val logoColor = colorResource(id = R.color.logo_color)
     val buttonBackgroundColor = colorResource(id = R.color.login_screen_sso_button_background)
     val buttonTextColor = colorResource(id = R.color.login_screen_sso_button_text)
     val backgroundColor = colorResource(id = R.color.login_screen_background)
@@ -144,7 +146,8 @@ fun LoginUI(
             Column(Modifier.align(Center)) {
                 // Logo
                 Image(
-                    painter = painterResource(id = R.mipmap.logo),
+                    painter = painterResource(id = R.drawable.logo),
+                    colorFilter = ColorFilter.tint(logoColor),
                     contentDescription = null,
                     modifier = Modifier
                         .align(CenterHorizontally)
