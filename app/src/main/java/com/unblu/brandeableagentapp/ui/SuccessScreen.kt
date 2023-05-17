@@ -16,7 +16,7 @@ import androidx.compose.ui.viewinterop.AndroidView
 import androidx.navigation.NavController
 import com.unblu.brandeableagentapp.R
 import com.unblu.brandeableagentapp.model.UnbluScreenViewModel
-import com.unblu.sdk.core.callback.ui.UnbluNavUtil
+import com.unblu.sdk.core.ui.UnbluNavUtil
 
 @SuppressLint("ServiceCast")
 @Composable

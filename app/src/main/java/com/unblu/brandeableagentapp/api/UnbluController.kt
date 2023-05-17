@@ -5,6 +5,7 @@ import android.util.Log
 import android.view.View
 import com.unblu.brandeableagentapp.AgentApplication
 import com.unblu.brandeableagentapp.data.AppConfiguration
+import com.unblu.livekitmodule.LiveKitModuleProvider
 import com.unblu.sdk.core.Unblu
 import com.unblu.sdk.core.agent.UnbluAgentClient
 import com.unblu.sdk.core.callback.InitializeExceptionCallback
@@ -14,7 +15,6 @@ import com.unblu.sdk.core.configuration.UnbluDownloadHandler
 import com.unblu.sdk.core.links.UnbluPatternMatchingExternalLinkHandler
 import com.unblu.sdk.core.notification.UnbluNotificationApi
 import com.unblu.sdk.module.call.CallModule
-import com.unblu.sdk.module.call.CallModuleProvider
 import com.unblu.sdk.module.firebase_notification.UnbluFirebaseNotificationService
 import com.unblu.sdk.module.mobilecobrowsing.MobileCoBrowsingModule
 import com.unblu.sdk.module.mobilecobrowsing.MobileCoBrowsingModuleProvider
@@ -65,7 +65,7 @@ class UnbluController(
     }
 
     private fun createUnbluClientConfiguration (): UnbluClientConfiguration {
-        callModule = CallModuleProvider.create()
+        callModule = LiveKitModuleProvider.create()
         coBrowsingModule = MobileCoBrowsingModuleProvider.create()
         return UnbluClientConfiguration.Builder(
             AppConfiguration.unbluServerUrl,
@@ -129,7 +129,7 @@ class UnbluController(
         agentClient = null
     }
 
-    fun setAccessToken(token: String) {
-        unbluClientConfiguration = UnbluClientConfiguration.Builder(unbluClientConfiguration).setAccessToken(token).build()
+    fun setOAuthToken(token: String) {
+        unbluClientConfiguration = UnbluClientConfiguration.Builder(unbluClientConfiguration).setOAuthToken(token).build()
     }
 }

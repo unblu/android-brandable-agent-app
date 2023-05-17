@@ -39,6 +39,7 @@ import com.unblu.brandeableagentapp.model.AuthenticationType
 import com.unblu.brandeableagentapp.model.LoginState
 import com.unblu.brandeableagentapp.model.LoginViewModel
 import com.unblu.brandeableagentapp.model.NavigationState
+import com.unblu.brandeableagentapp.nav.NavRoute
 import com.unblu.brandeableagentapp.util.CookieUtil
 
 @Composable
@@ -53,7 +54,7 @@ fun LoginScreenSSO(navController: NavHostController, viewModel: LoginViewModel) 
         // Login UI
         if (!showWebview) {
             Surface(color = backgroundColor) {
-                LoginUI(viewModel)
+                LoginUI(viewModel, navController)
             }
         }
         else if(AppConfiguration.authType is AuthenticationType.WebProxy)
@@ -121,7 +122,8 @@ fun LoginScreenSSO(navController: NavHostController, viewModel: LoginViewModel) 
 
 @Composable
 fun LoginUI(
-    viewModel: LoginViewModel
+    viewModel: LoginViewModel,
+    navController: NavHostController
 ) {
     val loginState by viewModel.loginState.collectAsState()
     val screenHeight = LocalConfiguration.current.screenHeightDp.dp
@@ -152,6 +154,9 @@ fun LoginUI(
                     modifier = Modifier
                         .align(CenterHorizontally)
                         .size(128.dp)
+                        .onDoubleClick {
+                            navController.navigate("settings")
+                        }
                 )
 
                 // Subtitle

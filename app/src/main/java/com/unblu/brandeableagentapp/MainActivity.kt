@@ -20,44 +20,32 @@ import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.unblu.brandeableagentapp.api.UnbluController
 import com.unblu.brandeableagentapp.data.AppConfiguration
 import com.unblu.brandeableagentapp.login.sso.oauth.OpenIdAuthController
-import com.unblu.brandeableagentapp.model.AuthenticationType
-import com.unblu.brandeableagentapp.model.LoginViewModel
-import com.unblu.brandeableagentapp.model.TokenEvent
-import com.unblu.brandeableagentapp.model.UnbluScreenViewModel
+import com.unblu.brandeableagentapp.model.*
 import com.unblu.brandeableagentapp.nav.NavGraph
 import com.unblu.brandeableagentapp.ui.theme.BrandeableAgentAppTheme
 import com.unblu.sdk.core.Unblu
 import com.unblu.sdk.core.application.UnbluApplicationHelper
-import com.unblu.sdk.core.configuration.UnbluPreferencesStorage
 import com.unblu.sdk.core.errortype.UnbluClientErrorType
 import com.unblu.sdk.core.internal.utils.Logger
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import kotlinx.coroutines.launch
 import net.openid.appauth.*
 import java.util.*
-import kotlin.math.log
 
 
 class MainActivity : ComponentActivity() {
+    private val unbluController: UnbluController
+        get() = (application as AgentApplication).unbluController
+    private lateinit var loginViewModel: LoginViewModel
+    private lateinit var unbluScreenViewModel: UnbluScreenViewModel
     private lateinit var signInLauncher: ActivityResultLauncher<Intent>
     val compositeDisposable = CompositeDisposable()
     private lateinit var openIdAuthController: OpenIdAuthController
-
+    private lateinit var viewModelProvider : ViewModelProvider
     @OptIn(ExperimentalAnimationApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val viewModelStore = ViewModelStore()
-        val unbluController = (application as AgentApplication).unbluController
-        val loginViewModel = ViewModelProvider(
-            viewModelStore,
-            ViewModelProvider.AndroidViewModelFactory.getInstance(application)
-        )[LoginViewModel::class.java]
-        loginViewModel.setUnbluController(unbluController)
-        val unbluScreenViewModel = ViewModelProvider(
-            viewModelStore,
-            ViewModelProvider.AndroidViewModelFactory.getInstance(application)
-        )[UnbluScreenViewModel::class.java]
-
+        configViewModels()
         setContent {
             val navController = rememberAnimatedNavController()
             val systemUiController = rememberSystemUiController()
@@ -69,14 +57,10 @@ class MainActivity : ComponentActivity() {
             BrandeableAgentAppTheme {
                 NavGraph(
                     navController,
-                    ViewModelProvider(
-                        viewModelStore,
-                        ViewModelProvider.AndroidViewModelFactory.getInstance(application)
-                    )
+                    viewModelProvider
                 )
             }
         }
-
         compositeDisposable.addAll(
             Unblu
                 .onAgentInitialized()
@@ -103,7 +87,9 @@ class MainActivity : ComponentActivity() {
                 }
             }
         )
-        configureAuthType(loginViewModel, (application as AgentApplication).getUnbluPrefs(), (application as AgentApplication).unbluController)
+        if (AppConfiguration.authType == AuthenticationType.OAuth)
+            configureOAuth()
+
         if(unbluController.getHasUiShowRequestValueAndReset()){
             when(AppConfiguration.authType){
                 AuthenticationType.OAuth -> openIdAuthController.startSignIn(signInLauncher)
@@ -115,13 +101,20 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    private fun configureAuthType(
-        loginViewModel: LoginViewModel,
-        unbluPreferencesStorage: UnbluPreferencesStorage,
-        unbluController: UnbluController
-    ) {
-        if (isOAuthTypeAuth()) {
-            openIdAuthController = OpenIdAuthController(this, unbluPreferencesStorage)
+    private fun configViewModels() {
+        viewModelProvider = ViewModelProvider(
+            viewModelStore,
+            ViewModelProvider.AndroidViewModelFactory.getInstance(application)
+        )
+        loginViewModel = viewModelProvider[LoginViewModel::class.java]
+        loginViewModel.setUnbluController(unbluController)
+        unbluScreenViewModel = viewModelProvider[UnbluScreenViewModel::class.java]
+        val settingsViewModel = viewModelProvider[SettingsViewModel::class.java]
+        settingsViewModel.fetchSettingsModel((application as AgentApplication).getUnbluPrefs())
+    }
+
+    private fun configureOAuth() {
+            openIdAuthController = OpenIdAuthController(this, (application as AgentApplication).getUnbluPrefs())
             configSignIn()
             lifecycleScope.launch {
                 openIdAuthController.eventReceived.collect { event ->
@@ -129,7 +122,7 @@ class MainActivity : ComponentActivity() {
                         is TokenEvent.TokenReceived -> {
                             Log.w(MainActivity::javaClass.name, "Got token: ${event.token}")
                             // Handle token received
-                            unbluController.setAccessToken(event.token)
+                            unbluController.setOAuthToken(event.token)
                             loginViewModel.startUnblu(null)
                         }
                         is TokenEvent.ErrorReceived -> {
@@ -149,12 +142,8 @@ class MainActivity : ComponentActivity() {
                     }
                 }
             }
-        }
-    }
 
-    private fun isOAuthTypeAuth() = AppConfiguration.authType is AuthenticationType.OAuth
-    private fun isDirectTypeAuth() = AppConfiguration.authType is AuthenticationType.Direct
-    private fun isWebProxyTypeAuth() = AppConfiguration.authType is AuthenticationType.WebProxy
+    }
 
     private fun configSignIn() {
         signInLauncher = registerForActivityResult(

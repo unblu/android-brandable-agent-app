@@ -84,16 +84,15 @@ dependencies {
 
 
     //UNBLU
-    /*implementation 'com.unblu.mobile-sdk-android:coresdk:4.5.5'
-    implementation 'com.unblu.mobile-sdk-android:callmodule:4.5.5'
-    implementation 'com.unblu.mobile-sdk-android:firebasenotificationmodule:4.5.5'
-    implementation 'com.unblu.mobile-sdk-android:mobilecobrowsingmodule:4.5.5'
-*/
+    /*implementation 'com.unblu.mobile-sdk-android:coresdk:4.6.1'
+    implementation 'com.unblu.mobile-sdk-android:livekitmodule:4.6.1'
+    implementation 'com.unblu.mobile-sdk-android:firebasenotificationmodule:4.6.1'
+    implementation 'com.unblu.mobile-sdk-android:mobilecobrowsingmodule:4.6.1'*/
+
     implementation 'com.unblu.mobile-sdk-android:coresdk'
-    implementation 'com.unblu.mobile-sdk-android:callmodule'
+    implementation 'com.unblu.mobile-sdk-android:livekitmodule'
     implementation 'com.unblu.mobile-sdk-android:firebasenotificationmodule'
     implementation 'com.unblu.mobile-sdk-android:mobilecobrowsingmodule'
-
 
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'

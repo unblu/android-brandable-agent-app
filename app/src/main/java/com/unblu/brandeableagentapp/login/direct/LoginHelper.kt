@@ -110,6 +110,7 @@ object LoginHelper {
             ) { throwable: Throwable ->
                 throwable.printStackTrace()
                 Logger.e(TAG, throwable.message)
+                failure.onReceiveValue("Could not Login: ${throwable.message}")
             }
     }
 

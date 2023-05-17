@@ -94,7 +94,7 @@ class OpenIdAuthController(var context: Context, var storage: UnbluPreferencesSt
     }
 
     private fun shouldReAuth(): Boolean {
-        return authState?.accessTokenExpirationTime!! - System.currentTimeMillis() <= 0
+        return authState?.accessTokenExpirationTime?.let { time -> time - System.currentTimeMillis() <= 0 } ?: true
     }
 
     fun handleActivityResult(resultCode: Int, @NonNull data: Intent?) {

@@ -1,19 +1,8 @@
-/*pluginManagement {
+pluginManagement {
     repositories {
-        gradlePluginPortal()
-        google()
         mavenCentral()
-        maven{ url "../unblu-mobile-sdk-android"}
+        gradlePluginPortal()
     }
 }
-dependencyResolutionManagement {
-    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
-    repositories {
-        google()
-        mavenCentral()
-        maven{ url "../unblu-mobile-sdk-android"}
-    }
-}*/
 rootProject.name = "Brandeable Agent App"
 include ':app'
-includeBuild("../sdk-android")

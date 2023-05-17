@@ -2,12 +2,15 @@ package com.unblu.brandeableagentapp.ui
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
+import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import com.unblu.brandeableagentapp.R
-import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.composed
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.TextStyle
@@ -16,6 +19,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.isSpecified
 import androidx.compose.ui.unit.sp
+import com.unblu.brandeableagentapp.model.AuthenticationType
 
 @Composable
 fun LabeledTextField(
@@ -32,12 +36,16 @@ fun LabeledTextField(
     trailingIcon: (@Composable () -> Unit)? = null
 ) {
     // Label
-    Text(
-        modifier = Modifier
-            .padding(8.dp)
-            .height(labelHeight),
-        text = label
-    )
+    Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+        Text(
+            modifier = Modifier
+                .padding(8.dp)
+                .height(labelHeight),
+            text = label
+        )
+        Spacer(Modifier.width(4.dp))
+
+    }
 
     // Input
     Row(
@@ -56,7 +64,6 @@ fun LabeledTextField(
             visualTransformation = visualTransformation,
             trailingIcon = trailingIcon,
             maxLines = 1,
-            textStyle = TextStyle.Default.copy(fontSize = (inputHeight.value*0.3).sp),
             colors = TextFieldDefaults.textFieldColors(
                 textColor = inputTextColor,
                 cursorColor = inputTextColor,
@@ -81,14 +88,16 @@ object AlertDialogColorDefaults {
     @Composable
     fun alertDialogColors(): AlertDialogColors {
         return AlertDialogColors(
-            background = colorResource(id =R.color.alert_dialog_background ),
-            textColor = colorResource(id = R.color.alert_dialog_text ),
-            titleColor = colorResource(id =R.color.alert_dialog_title ),
-            cancelTextColor = colorResource(id =R.color.alert_dialog_cancel_text ),
-            confirmTextColor = colorResource(id =R.color.alert_dialog_confirm_text))
+            background = colorResource(id = R.color.alert_dialog_background),
+            textColor = colorResource(id = R.color.alert_dialog_text),
+            titleColor = colorResource(id = R.color.alert_dialog_title),
+            cancelTextColor = colorResource(id = R.color.alert_dialog_cancel_text),
+            confirmTextColor = colorResource(id = R.color.alert_dialog_confirm_text)
+        )
     }
 
 }
+
 @Composable
 fun CustomAlertDialog(
     alertDialogColors: AlertDialogColors,
@@ -131,4 +140,68 @@ fun CustomAlertDialog(
         },
         backgroundColor = alertDialogColors.background
     )
+}
+
+@Composable
+fun SettingsTextField(
+    label: String,
+    value: String,
+    onValueChange: (String) -> Unit
+) {
+    LabeledTextField(
+        label = label,
+        value = value,
+        onValueChange = onValueChange,
+        modifier = Modifier.fillMaxWidth(),
+        labelHeight = 24.dp,
+        inputHeight = 48.dp,
+        inputBackground = Color.White,
+        borderColor = Color.Gray,
+        inputTextColor = Color.Black
+    )
+}
+
+@Composable
+fun RadioButtonGroup(
+    options: List<String>,
+    onOptionSelected: (String) -> Unit,
+    defaultOption: AuthenticationType
+) {
+    Row(
+        Modifier
+            .fillMaxWidth()
+    ) {
+        options.forEach { option ->
+            Row(
+                Modifier
+                    .padding(8.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Start
+            ) {
+                RadioButton(
+                    selected = option == defaultOption.name,
+                    onClick = {
+                        onOptionSelected(option)
+                    }
+                )
+                Spacer(modifier = Modifier.width(8.dp))
+                Text(
+                    text = option,
+                    style = MaterialTheme.typography.body1
+                )
+            }
+        }
+    }
+}
+
+fun Modifier.onDoubleClick(onDoubleClick: () -> Unit): Modifier = composed {
+    val lastClickTimestamp = remember { mutableStateOf(0L) }
+    val doubleClickMillis = 250
+    this.clickable {
+        val currentTimestamp = System.currentTimeMillis()
+        if (currentTimestamp - lastClickTimestamp.value < doubleClickMillis) {
+            onDoubleClick.invoke()
+        }
+        lastClickTimestamp.value = currentTimestamp
+    }
 }

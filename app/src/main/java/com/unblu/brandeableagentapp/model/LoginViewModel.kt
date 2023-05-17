@@ -9,8 +9,7 @@ import com.unblu.brandeableagentapp.data.AppConfiguration
 import com.unblu.brandeableagentapp.login.direct.LoginHelper
 import com.unblu.brandeableagentapp.login.direct.util.validatePassword
 import com.unblu.brandeableagentapp.login.direct.util.validateUsername
-import com.unblu.brandeableagentapp.login.proxy.ProxyWebViewClient
-import com.unblu.brandeableagentapp.model.Storage.UNBLU_USERNAME
+import com.unblu.brandeableagentapp.data.Storage.UNBLU_USERNAME
 import com.unblu.sdk.core.Unblu
 import com.unblu.sdk.core.callback.InitializeExceptionCallback
 import com.unblu.sdk.core.configuration.UnbluClientConfiguration
@@ -37,7 +36,7 @@ class LoginViewModel : ViewModel() {
     val showWebview: StateFlow<Boolean> = _showWebview
     //Direct
     val password = mutableStateOf("harmless-squire-spotter")
-    val username = mutableStateOf("harmless-squire-spotter")
+    val username = mutableStateOf("superadmin")
 
     private val _authType = MutableStateFlow(AppConfiguration.authType)
     val authType: StateFlow<AuthenticationType> = _authType

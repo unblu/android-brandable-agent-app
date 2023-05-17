@@ -32,6 +32,7 @@ import com.unblu.brandeableagentapp.R
 import com.unblu.brandeableagentapp.model.LoginState
 import com.unblu.brandeableagentapp.model.LoginViewModel
 import com.unblu.brandeableagentapp.model.NavigationState
+import com.unblu.brandeableagentapp.nav.NavRoute
 
 
 @Composable
@@ -74,6 +75,9 @@ fun LoginScreen(navController: NavHostController, viewModel: LoginViewModel) {
                         modifier = Modifier
                             .align(CenterHorizontally)
                             .size(128.dp)
+                            .onDoubleClick {
+                                navController.navigate(NavRoute.Settings.route)
+                            }
                     )
 
                     // Subtitle
@@ -91,7 +95,7 @@ fun LoginScreen(navController: NavHostController, viewModel: LoginViewModel) {
                     label = stringResource(R.string.login_username_label),
                     value = username,
                     onValueChange = viewModel::onUsernameChange,
-                    labelHeight = inputAndButtonHeight / 2,
+                    labelHeight = (inputAndButtonHeight.value * 0.3).dp,
                     inputHeight = inputAndButtonHeight,
                     inputBackground = inputBackground,
                     borderColor = borderColor,
@@ -105,7 +109,7 @@ fun LoginScreen(navController: NavHostController, viewModel: LoginViewModel) {
                     label = stringResource(R.string.login_password_label),
                     value = password,
                     onValueChange = viewModel::onPasswordChange,
-                    labelHeight = inputAndButtonHeight / 2,
+                    labelHeight = (inputAndButtonHeight.value * 0.3).dp,
                     inputHeight = inputAndButtonHeight,
                     inputBackground = inputBackground,
                     borderColor = borderColor,
