@@ -33,7 +33,7 @@ allprojects {
             url 'https://jitpack.io'
         }
         mavenCentral()
-
+        maven{ url "../unblu-mobile-sdk-android"}
     }
 }
 

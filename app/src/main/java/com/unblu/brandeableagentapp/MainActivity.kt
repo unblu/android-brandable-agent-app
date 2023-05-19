@@ -35,7 +35,7 @@ import java.util.*
 
 class MainActivity : ComponentActivity() {
     private val unbluController: UnbluController
-        get() = (application as AgentApplication).unbluController
+        get() = (application as AgentApplication).getUnbluController()
     private lateinit var loginViewModel: LoginViewModel
     private lateinit var unbluScreenViewModel: UnbluScreenViewModel
     private lateinit var signInLauncher: ActivityResultLauncher<Intent>

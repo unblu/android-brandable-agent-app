@@ -44,7 +44,7 @@ fun LoginScreen(navController: NavHostController, viewModel: LoginViewModel) {
     val passwordVisibility by viewModel.passwordVisiblity.collectAsState()
 
     val screenHeight = LocalConfiguration.current.screenHeightDp.dp
-    val inputAndButtonHeight = screenHeight * 0.060f
+    val inputAndButtonHeight = screenHeight * 0.07f
     val backgroundColor = colorResource(id = R.color.login_screen_background)
     val logoColor = colorResource(id = R.color.logo_color)
     val inputBackground = colorResource(id = R.color.input_background_color)
@@ -95,7 +95,6 @@ fun LoginScreen(navController: NavHostController, viewModel: LoginViewModel) {
                     label = stringResource(R.string.login_username_label),
                     value = username,
                     onValueChange = viewModel::onUsernameChange,
-                    labelHeight = (inputAndButtonHeight.value * 0.3).dp,
                     inputHeight = inputAndButtonHeight,
                     inputBackground = inputBackground,
                     borderColor = borderColor,
@@ -109,7 +108,6 @@ fun LoginScreen(navController: NavHostController, viewModel: LoginViewModel) {
                     label = stringResource(R.string.login_password_label),
                     value = password,
                     onValueChange = viewModel::onPasswordChange,
-                    labelHeight = (inputAndButtonHeight.value * 0.3).dp,
                     inputHeight = inputAndButtonHeight,
                     inputBackground = inputBackground,
                     borderColor = borderColor,
@@ -131,7 +129,7 @@ fun LoginScreen(navController: NavHostController, viewModel: LoginViewModel) {
                     Box(
                         modifier = Modifier
                             .fillMaxWidth(),
-                        contentAlignment = Alignment.Center
+                        contentAlignment = Center
                     ) {
                         when (loginState) {
                             LoginState.LoggingIn -> {

@@ -27,7 +27,6 @@ fun LabeledTextField(
     value: String,
     onValueChange: (String) -> Unit,
     modifier: Modifier = Modifier,
-    labelHeight: Dp,
     inputHeight: Dp,
     inputBackground: Color,
     borderColor: Color,
@@ -36,31 +35,23 @@ fun LabeledTextField(
     trailingIcon: (@Composable () -> Unit)? = null
 ) {
     // Label
-    Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+    Column(
+        Modifier
+            .fillMaxWidth()
+    )
+    {
         Text(
-            modifier = Modifier
-                .padding(8.dp)
-                .height(labelHeight),
             text = label
         )
         Spacer(Modifier.width(4.dp))
-
-    }
-
-    // Input
-    Row(
-        modifier = modifier
-            .fillMaxWidth()
-            .height(inputHeight)
-            .background(color = inputBackground)
-            .border(1.dp, borderColor, shape = RoundedCornerShape(4.dp))
-            .padding(1.dp)
-    ) {
         TextField(
             value = value,
             onValueChange = onValueChange,
             modifier = Modifier
-                .fillMaxSize(),
+                .fillMaxWidth()
+                .height(inputHeight)
+                .background(color = inputBackground)
+                .border(1.dp, borderColor, shape = RoundedCornerShape(4.dp)),
             visualTransformation = visualTransformation,
             trailingIcon = trailingIcon,
             maxLines = 1,
@@ -153,7 +144,6 @@ fun SettingsTextField(
         value = value,
         onValueChange = onValueChange,
         modifier = Modifier.fillMaxWidth(),
-        labelHeight = 24.dp,
         inputHeight = 48.dp,
         inputBackground = Color.White,
         borderColor = Color.Gray,

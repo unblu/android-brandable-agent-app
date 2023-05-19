@@ -24,11 +24,12 @@ class SettingsViewModel : ViewModel() {
         _settingsModel.value = storedSettingsJson?.let {
             gson.fromJson(it, SettingsModel::class.java)
         }?: SettingsModel()
+        updateSettingsModel(_settingsModel.value)
     }
 
     fun updateSettingsModel(updatedModel: SettingsModel) {
-        unbluPreferencesStorage.put(UNBLU_SETTINGS, Gson().toJson(updatedModel))
         _settingsModel.value = updatedModel
+        unbluPreferencesStorage.put(UNBLU_SETTINGS, Gson().toJson(_settingsModel.value))
         AppConfiguration.updateFromSettingsModel(updatedModel)
     }
 

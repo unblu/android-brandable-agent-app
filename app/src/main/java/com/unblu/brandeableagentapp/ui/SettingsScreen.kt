@@ -1,6 +1,7 @@
 package com.unblu.brandeableagentapp.ui
 
 import android.annotation.SuppressLint
+import android.util.Log
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.*
@@ -61,8 +62,9 @@ fun SettingsScreen(
                             AuthenticationType.OAuth.name
                         ),
                         onOptionSelected = { authType ->
-                            settings.let {
-                                val updatedModel = it.copy(authType = authTypeFromName(authType))
+                            settings.let { model->
+                                Log.w("SettingsScreen ", "auth type: $authType" )
+                                val updatedModel = model.copy(authType = authTypeFromName(authType))
                                 updateSettingsModel(updatedModel)
                             }
                         },

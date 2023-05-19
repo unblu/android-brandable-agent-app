@@ -38,9 +38,6 @@ class LoginViewModel : ViewModel() {
     val password = mutableStateOf("harmless-squire-spotter")
     val username = mutableStateOf("superadmin")
 
-    private val _authType = MutableStateFlow(AppConfiguration.authType)
-    val authType: StateFlow<AuthenticationType> = _authType
-
     //Direct login
     private val _passwordVisiblity = MutableStateFlow(false)
     val passwordVisiblity: StateFlow<Boolean> = _passwordVisiblity
@@ -128,7 +125,7 @@ class LoginViewModel : ViewModel() {
             _loginState.emit(LoginState.LoggingIn)
         }
         viewModelScope.launch {
-            if (authType.value is AuthenticationType.OAuth)
+            if (AppConfiguration.authType is AuthenticationType.OAuth)
                 _customTabsOpen.emit(true)
             else
                 _showWebview.emit(true)
@@ -137,7 +134,7 @@ class LoginViewModel : ViewModel() {
 
     fun setUnbluController(unbluController: UnbluController) {
         this.unbluController = unbluController
-        if(authType.value == AuthenticationType.Direct)
+        if(AppConfiguration.authType  == AuthenticationType.Direct)
             unbluController.getConfiguration().preferencesStorage.get(UNBLU_USERNAME)?.apply {
                 onUsernameChange(this)
             }

@@ -26,7 +26,7 @@ class TokenRefreshWorker(context: Context, workerParams: WorkerParameters) :
     }
 
     override fun doWork(): Result {
-        val unbluController = (applicationContext as AgentApplication).unbluController
+        val unbluController = (applicationContext as AgentApplication).getUnbluController()
         // Retrieve the stored AuthState
         val authState: AuthState = workerParams.inputData.getString(AUTH_STATE)
             ?.let { data -> AuthState.jsonDeserialize(data) }
@@ -43,24 +43,24 @@ class TokenRefreshWorker(context: Context, workerParams: WorkerParameters) :
             OpenIdAuthController(applicationContext, unbluPreferencesStorage)
 
         appAuthController.refreshAccessToken(tokenRequest) { response, ex ->
-                if (response != null) {
-                    // Update the stored AuthState with the new token response
-                    authState.update(response, ex)
-                    storeAuthState(authState, unbluPreferencesStorage)
-                    scheduleTokenRefresh(applicationContext, authState)
-                    unbluController.getClient()?.apply {
-                        authState.accessToken?.let {
-                            setAccessToken(authState.accessToken)
-                        } ?: kotlin.run {
-                            Log.w(TAG, "did not receive access token")
-                        }
+            if (response != null) {
+                // Update the stored AuthState with the new token response
+                authState.update(response, ex)
+                storeAuthState(authState, unbluPreferencesStorage)
+                scheduleTokenRefresh(applicationContext, authState)
+                unbluController.getClient()?.apply {
+                    authState.accessToken?.let {
+                        setAccessToken(authState.accessToken)
+                    } ?: kotlin.run {
+                        Log.w(TAG, "did not receive access token")
                     }
-                    // Notify App and pass in the new token to the serviceWorker
-                } else {
-                    scheduleTokenRefresh(applicationContext, authState)
-                    // Handle failed token refresh here
                 }
+                // Notify App and pass in the new token to the serviceWorker
+            } else {
+                scheduleTokenRefresh(applicationContext, authState)
+                // Handle failed token refresh here
             }
+        }
 
         return Result.success()
     }
