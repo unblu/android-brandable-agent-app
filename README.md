@@ -1,92 +1,201 @@
 # Android Brandable Agent App
 
+A basic application you can adapt to your organization's branding to create a fully functional agent application that works with the Unblu Collaboration Server.
 
+## Rename the app
+To rename an application, follow these steps:
 
-## Getting started
+### Step 1: Update the App Name
 
-To make it easy for you to get started with GitLab, here's a list of recommended next steps.
+The name of your app as it appears on the device can be changed in the `strings.xml` file.
 
-Already a pro? Just edit this README.md and make it your own. Want to make it easy? [Use the template at the bottom](#editing-this-readme)!
+1. Open your project in Android Studio.
+2. Go to `res > values > strings.xml`.
+3. Change the `app_name` string to your new name.
 
-## Add your files
-
-- [ ] [Create](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#create-a-file) or [upload](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#upload-a-file) files
-- [ ] [Add files using the command line](https://docs.gitlab.com/ee/gitlab-basics/add-file.html#add-a-file-using-the-command-line) or push an existing Git repository with the following command:
-
+```xml
+<resources>
+    <string name="app_name">Your New App Name</string>
+</resources>
 ```
-cd existing_repo
-git remote add origin https://gitlab.uops.cloud/hugo.goncalves/android-brandable-agent-app.git
-git branch -M main
-git push -uf origin main
+
+### Step 2: Update the Package Name
+
+Click on the Android perspective in the Project pane in Android Studio (top left).
+Make sure the Flattened option is unchecked under the dropdown menu in the Project pane.
+Right-click on your package under java, select Refactor > Rename, and change the name.
+Android Studio will highlight any errors due to this change, follow the recommended fixes.
+Please note that if you've already published your app on the Google Play Store under a specific package name, changing it will make Google Play treat it as a completely new app.
+
+### Step 3: Update Application ID
+The Application ID uniquely identifies your app on the device and in the Google Play Store, so changing this is often required when renaming the app.
+
+Go to Gradle Scripts > build.gradle (Module: app).
+Find the defaultConfig section and change the applicationId to your new package name.
+
+```groovy
+    defaultConfig {
+    applicationId "com.example.newpackagename"
+    minSdkVersion 15
+    targetSdkVersion 29
+    versionCode 1
+    versionName "1.0"
+}
 ```
 
-## Integrate with your tools
+Sync the project by clicking Sync Now in the top right corner.
 
-- [ ] [Set up project integrations](https://gitlab.uops.cloud/hugo.goncalves/android-brandable-agent-app/-/settings/integrations)
+### Step 4: Refactor the code to match new package name (Optional)
+If you have renamed your package, you should refactor all occurrences of the old package name in your codebase to match the new name.
+Use the find and replace function (Ctrl + Shift + R on Windows/Linux or Cmd + Shift + R on MacOS) in Android Studio to make this easier.
 
-## Collaborate with your team
+After following these steps, your Android app should have the new name.
 
-- [ ] [Invite team members and collaborators](https://docs.gitlab.com/ee/user/project/members/)
-- [ ] [Create a new merge request](https://docs.gitlab.com/ee/user/project/merge_requests/creating_merge_requests.html)
-- [ ] [Automatically close issues from merge requests](https://docs.gitlab.com/ee/user/project/issues/managing_issues.html#closing-issues-automatically)
-- [ ] [Enable merge request approvals](https://docs.gitlab.com/ee/user/project/merge_requests/approvals/)
-- [ ] [Automatically merge when pipeline succeeds](https://docs.gitlab.com/ee/user/project/merge_requests/merge_when_pipeline_succeeds.html)
 
-## Test and Deploy
+## Replace the app icon
 
-Use the built-in continuous integration in GitLab.
+### Step 1: Prepare your Icon
 
-- [ ] [Get started with GitLab CI/CD](https://docs.gitlab.com/ee/ci/quick_start/index.html)
-- [ ] [Analyze your code for known vulnerabilities with Static Application Security Testing(SAST)](https://docs.gitlab.com/ee/user/application_security/sast/)
-- [ ] [Deploy to Kubernetes, Amazon EC2, or Amazon ECS using Auto Deploy](https://docs.gitlab.com/ee/topics/autodevops/requirements.html)
-- [ ] [Use pull-based deployments for improved Kubernetes management](https://docs.gitlab.com/ee/user/clusters/agent/)
-- [ ] [Set up protected environments](https://docs.gitlab.com/ee/ci/environments/protected_environments.html)
+Before changing the app icon, make sure your new icon is prepared. Android requires that these icons be in PNG format, and recommends icon sizes of 48x48, 72x72, 96x96, 144x144 and 192x192 pixels to accommodate various device screen sizes and resolutions.
 
-***
+### Step 2: Add the Icon to the Project
 
-# Editing this README
+1. Once your icons are ready, open your project in Android Studio.
+2. Navigate to `res` directory in the project pane.
+3. Under `res`, you'll find directories for different pixel densities like `mipmap-mdpi`, `mipmap-hdpi`, `mipmap-xhdpi`, `mipmap-xxhdpi`, `mipmap-xxxhdpi`.
+4. Replace the `ic_launcher.png` files in all the `mipmap` folders with your new icon, keeping each icon's size appropriate for the density of the folder.
 
-When you're ready to make this README your own, just edit this file and use the handy template below (or feel free to structure it however you want - this is just a starting point!). Thank you to [makeareadme.com](https://www.makeareadme.com/) for this template.
+### Step 3: Update the Manifest
 
-## Suggestions for a good README
-Every project is different, so consider which of these sections apply to yours. The sections used in the template are suggestions for most open source projects. Also keep in mind that while a README can be too long and detailed, too long is better than too short. If you think your README is too long, consider utilizing another form of documentation rather than cutting out information.
+In most cases, Android Studio automatically updates the manifest file when you change the app icon. However, if this doesn't happen, you can do it manually.
 
-## Name
-Choose a self-explaining name for your project.
+1. Go to `AndroidManifest.xml`.
+2. In the `<application>` tag, update the `android:icon` and `android:roundIcon` attributes to `@mipmap/ic_launcher`.
 
-## Description
-Let people know what your project can do specifically. Provide context and add a link to any reference visitors might be unfamiliar with. A list of Features or a Background subsection can also be added here. If there are alternatives to your project, this is a good place to list differentiating factors.
+```xml
+<application
+    android:allowBackup="true"
+    android:icon="@mipmap/ic_launcher"
+    android:roundIcon="@mipmap/ic_launcher_round"
+    android:label="@string/app_name">
+```
 
-## Badges
-On some READMEs, you may see small images that convey metadata, such as whether or not all the tests are passing for the project. You can use Shields to add some to your README. Many services also have instructions for adding a badge.
+## Changing the Splash Screen Logo
 
-## Visuals
-Depending on what you are making, it can be a good idea to include screenshots or even a video (you'll frequently see GIFs rather than actual videos). Tools like ttygif can help, but check out Asciinema for a more sophisticated method.
+In the case of the splash screen, you need to replace the image in the `SplashScreen.kt` file. This file contains a composable function which defines the splash screen UI, including the logo.
 
-## Installation
-Within a particular ecosystem, there may be a common way of installing things, such as using Yarn, NuGet, or Homebrew. However, consider the possibility that whoever is reading your README is a novice and would like more guidance. Listing specific steps helps remove ambiguity and gets people to using your project as quickly as possible. If it only runs in a specific context like a particular programming language version or operating system or has dependencies that have to be installed manually, also add a Requirements subsection.
+### Step 1: Prepare your Logo
 
-## Usage
-Use examples liberally, and show the expected output if you can. It's helpful to have inline the smallest example of usage that you can demonstrate, while providing links to more sophisticated examples if they are too long to reasonably include in the README.
+Just like with the app icon, ensure your new logo image is prepared. It should be a PNG file, and you'll need to size it appropriately for your splash screen.
 
-## Support
-Tell people where they can go to for help. It can be any combination of an issue tracker, a chat room, an email address, etc.
+### Step 2: Add the Logo to the Project
 
-## Roadmap
-If you have ideas for releases in the future, it is a good idea to list them in the README.
+1. Once your logo is ready, open your project in Android Studio.
+2. Navigate to the `res > drawable` directory in the project pane.
+3. Add your new logo file into this `drawable` folder.
 
-## Contributing
-State if you are open to contributions and what your requirements are for accepting them.
+### Step 3: Update the SplashScreen.kt
 
-For people who want to make changes to your project, it's helpful to have some documentation on how to get started. Perhaps there is a script that they should run or some environment variables that they need to set. Make these steps explicit. These instructions could also be useful to your future self.
+1. Go to the `SplashScreen.kt` file in your project.
+2. Look for the `Image` composable function in the file. It should be something like:
 
-You can also document commands to lint the code or run tests. These steps help to ensure high code quality and reduce the likelihood that the changes inadvertently break something. Having instructions for running tests is especially helpful if it requires external setup, such as starting a Selenium server for testing in a browser.
+```kotlin
+Image(
+    painter = painterResource(id = R.drawable.logo),
+    //use this color filter if you wish to change the color
+    colorFilter = ColorFilter.tint(Color.White),
+    contentDescription = null,
+    modifier = Modifier.size(128.dp)
+)
+```
+3. Replace R.drawable.old_logo with R.drawable.new_logo in the painterResource function. Make sure new_logo is the name of your new logo file that you placed in the res > drawable directory. So, it should look like:
+```kotlin
+Image(
+    painter = painterResource(id = R.drawable.new_logo),
+    //use this color filter if you wish to change the color
+    colorFilter = ColorFilter.tint(Color.White),
+    contentDescription = null,
+    modifier = Modifier.size(128.dp)
+)
+```
 
-## Authors and acknowledgment
-Show your appreciation to those who have contributed to the project.
+After following these steps, your Android app's splash screen should now display the new logo.
 
-## License
-For open source projects, say how it is licensed.
 
-## Project status
-If you have run out of energy or time for your project, put a note at the top of the README saying that development has slowed down or stopped completely. Someone may choose to fork your project or volunteer to step in as a maintainer or owner, allowing your project to keep going. You can also make an explicit request for maintainers.
+## Localizing the Android App
+
+Here are the steps to localize your Android app:
+
+### Step 1: Define your Strings
+
+1. Open your project in Android Studio.
+2. Navigate to `res > values > strings.xml`.
+3. Make sure all the text content of your app is defined here. For example:
+
+```xml
+<resources>
+    <string name="app_name">My App</string>
+    <string name="hello">Hello</string>
+</resources>
+```
+
+### Step 2: Create values directories for languages
+For each language that you want to support, create a new values directory with a suffix indicating the language code. For instance, values-de for German, values-fr for French.
+
+### Step 3: Add a strings.xml file for each language
+In each new values directory, create a new strings.xml file. In these files, translate each string value into the appropriate language. For example, the strings.xml in values-de might look like this:
+```xml
+<resources>
+    <string name="app_name">Mi Aplicación</string>
+    <string name="hello">Hallo</string>
+</resources>
+```
+
+### Step 4: Use string resources in the code
+In your code, always reference these string resources instead of hardcoding text. For example, in a Kotlin file, you might get the string resource for "hello" like this:
+
+```kotlin
+    label = stringResource(R.string.login_username_label)
+```
+
+In an XML layout file, you would reference it like this:
+
+```xml
+<TextView
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="@string/login_username_label" />
+```
+
+## Authentication methods
+To set the authentication method, adapt the properties of the `AppConfiguration.kt` object.
+There are three ways to authenticate:
+
+- Direct authentication.
+Set the following properties:
+	- `unbluServerUrl` - The HTTP address of your Unblu Collaboration Server
+	- `entryPath` - The entry path
+	- `authType = AuthenticationType.Direct`
+
+- Authentication with a reverse proxy.
+Set the following properties:
+	- `unbluServerUrl` - The HTTP address of you proxy server
+	- `entryPath` - The entry path
+	- `authType = AuthenticationType.WebProxy`
+
+- With an external identity provider and authorization header. 
+Set the following properties:
+    - `unbluServerUrl` - The HTTP address of you proxy server
+    - `entryPath` - The entry path
+    - `authType = AuthenticationType.OAuth`
+    - `authProvider` - The information your identity provider requires.
+    - `oAuthClientId` - The client ID is a unique identifier for a client application that is registered in an authorization server. For instance, your value could be `"3eb7f2d1-45c6-497b-8496-721b4563c0d0"`.
+    - `oAuthRedirectUri` - The redirect URI is where the client gets sent after the authorization step. For instance, your value could be `"msauth://com.unblu.brandeableagentapp/q6RIFzsc0JFs79rGhixu0w9s9QF3"`.
+    - `oAuthEndpoint` - This is the URL that the client needs to access in order to start the OAuth flow. For instance, your value could be `"https://login.microsoftonline.com/app-id/oauth2/v2.0/authorize"`.
+    - `oAuthTokenEndpoint` - This is the URL that the client needs to access in order to exchange an authorization code for an access token. For instance, your value could be `"https://login.microsoftonline.com/app-id/oauth2/v2.0/token"`.
+
+You should replace the sample values with the ones you obtained from your OAuth 2.0 server.
+
+Refer to you identity provider's documentation for how to fill in these settings correctly.
+
+Once you've done that, your application will only work with these domains.
