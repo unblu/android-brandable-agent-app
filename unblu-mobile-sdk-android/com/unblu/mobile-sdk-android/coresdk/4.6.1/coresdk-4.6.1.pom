@@ -47,6 +47,11 @@
       <version>2.9.0</version>
     </dependency>
     <dependency>
+      <groupId>androidx.webkit</groupId>
+      <artifactId>webkit</artifactId>
+      <version>1.5.0</version>
+    </dependency>
+    <dependency>
       <groupId>com.google.android.material</groupId>
       <artifactId>material</artifactId>
       <version>1.6.1</version>
