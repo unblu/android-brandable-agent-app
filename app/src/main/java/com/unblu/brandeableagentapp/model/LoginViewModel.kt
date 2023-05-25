@@ -47,12 +47,14 @@ class LoginViewModel : ViewModel() {
         startUnblu(cookies)
     }
 
+    //SSO proxy login
     fun startUnblu(cookies: Set<UnbluCookie>?) {
         viewModelScope.launch {
             _showWebview.emit(false)
         }
         val config = cookies?.let {
             UnbluClientConfiguration.Builder(unbluController.getConfiguration())
+                .setUnbluBaseUrl(AppConfiguration.webAuthProxyServerAddress)
                 .setCustomCookies(cookies).build()
         } ?: unbluController.getConfiguration()
 
@@ -109,7 +111,7 @@ class LoginViewModel : ViewModel() {
                     username,
                     password,
                     { cookies ->
-                        unbluController.getConfiguration().preferencesStorage.put(UNBLU_USERNAME,username)
+                        unbluController.getPreferencesStorage().put(UNBLU_USERNAME,username)
                         startUnblu(cookies)
                     },
                     { error ->
@@ -135,7 +137,7 @@ class LoginViewModel : ViewModel() {
     fun setUnbluController(unbluController: UnbluController) {
         this.unbluController = unbluController
         if(AppConfiguration.authType  == AuthenticationType.Direct)
-            unbluController.getConfiguration().preferencesStorage.get(UNBLU_USERNAME)?.apply {
+            unbluController.getPreferencesStorage().get(UNBLU_USERNAME)?.apply {
                 onUsernameChange(this)
             }
     }

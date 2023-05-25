@@ -183,7 +183,7 @@ fun LoginUI(
                                 backgroundColor = buttonBackgroundColor,
                                 contentColor = buttonTextColor
                             ),
-                            enabled = false,
+                            enabled = true,
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .height(buttonHeight)

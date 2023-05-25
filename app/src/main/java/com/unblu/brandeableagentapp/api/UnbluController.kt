@@ -12,6 +12,7 @@ import com.unblu.sdk.core.callback.InitializeExceptionCallback
 import com.unblu.sdk.core.callback.InitializeSuccessCallback
 import com.unblu.sdk.core.configuration.UnbluClientConfiguration
 import com.unblu.sdk.core.configuration.UnbluDownloadHandler
+import com.unblu.sdk.core.configuration.UnbluPreferencesStorage
 import com.unblu.sdk.core.links.UnbluPatternMatchingExternalLinkHandler
 import com.unblu.sdk.core.notification.UnbluNotificationApi
 import com.unblu.sdk.module.call.CallModule
@@ -115,6 +116,13 @@ class UnbluController(
     }
 
     fun getConfiguration(): UnbluClientConfiguration {
+        createUnbluClientConfiguration()
+        unbluClientConfiguration =
+            UnbluClientConfiguration.Builder(unbluClientConfiguration)
+                .setUnbluBaseUrl(AppConfiguration.unbluServerUrl)
+                .setApiKey(AppConfiguration.unbluApiKey)
+                .setEntryPath(AppConfiguration.entryPath)
+                .build()
         return unbluClientConfiguration
     }
 
@@ -131,5 +139,9 @@ class UnbluController(
 
     fun setOAuthToken(token: String) {
         unbluClientConfiguration = UnbluClientConfiguration.Builder(unbluClientConfiguration).setOAuthToken(token).build()
+    }
+
+    fun getPreferencesStorage(): UnbluPreferencesStorage {
+        return unbluClientConfiguration.preferencesStorage
     }
 }
