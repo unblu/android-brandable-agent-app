@@ -16,6 +16,8 @@ class UnbluScreenViewModel : ViewModel() {
     val mainView : State<View?>get() = _mainView
     private val _sessionEnded = MutableSharedFlow<Unit>()
     val sessionEnded = _sessionEnded.asSharedFlow()
+    private var _chatUiOpen =  mutableStateOf(false)
+    val chatUiOpen: State<Boolean> = _chatUiOpen
 
     fun setMainView(mainView: View?) {
         _mainView.value =  mainView
@@ -29,5 +31,9 @@ class UnbluScreenViewModel : ViewModel() {
         viewModelScope.launch {
             _sessionEnded.emit(Unit)
         }
+    }
+
+    fun emitChatOpen(chatUiOpen: Boolean) {
+            _chatUiOpen.value = chatUiOpen
     }
 }

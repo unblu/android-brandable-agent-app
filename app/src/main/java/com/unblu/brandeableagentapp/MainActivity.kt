@@ -13,7 +13,6 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelStore
 import androidx.lifecycle.lifecycleScope
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
@@ -67,6 +66,9 @@ class MainActivity : ComponentActivity() {
                 .subscribe(
                     { agentClient ->
                         unbluScreenViewModel.setMainView(agentClient.mainView)
+                        compositeDisposable.add(agentClient.openConversation.subscribe { conversation->
+                            unbluScreenViewModel.emitChatOpen(conversation.isPresent)
+                        })
                     },
                     { error -> Log.e("MainActivity", "Error: ${error.localizedMessage}") }
                 ),
@@ -167,6 +169,7 @@ class MainActivity : ComponentActivity() {
 
     override fun onDestroy() {
         viewModelStore.clear()
+        compositeDisposable.clear()
         super.onDestroy()
     }
 

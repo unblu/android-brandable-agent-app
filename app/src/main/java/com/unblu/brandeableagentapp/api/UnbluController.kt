@@ -14,8 +14,10 @@ import com.unblu.sdk.core.configuration.UnbluClientConfiguration
 import com.unblu.sdk.core.configuration.UnbluDownloadHandler
 import com.unblu.sdk.core.configuration.UnbluPreferencesStorage
 import com.unblu.sdk.core.links.UnbluPatternMatchingExternalLinkHandler
+import com.unblu.sdk.core.module.call.CallModuleProviderFactory
 import com.unblu.sdk.core.notification.UnbluNotificationApi
 import com.unblu.sdk.module.call.CallModule
+import com.unblu.sdk.module.call.CallModuleProvider
 import com.unblu.sdk.module.firebase_notification.UnbluFirebaseNotificationService
 import com.unblu.sdk.module.mobilecobrowsing.MobileCoBrowsingModule
 import com.unblu.sdk.module.mobilecobrowsing.MobileCoBrowsingModuleProvider
@@ -66,7 +68,10 @@ class UnbluController(
     }
 
     private fun createUnbluClientConfiguration (): UnbluClientConfiguration {
-        callModule = LiveKitModuleProvider.create()
+        callModule = CallModuleProviderFactory.createDynamic(
+            CallModuleProvider.createForDynamic(),
+            LiveKitModuleProvider.createForDynamic()
+        )
         coBrowsingModule = MobileCoBrowsingModuleProvider.create()
         return UnbluClientConfiguration.Builder(
             AppConfiguration.unbluServerUrl,
