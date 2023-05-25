@@ -55,6 +55,8 @@ class LoginViewModel : ViewModel() {
         val config = cookies?.let {
             UnbluClientConfiguration.Builder(unbluController.getConfiguration())
                 .setUnbluBaseUrl(AppConfiguration.webAuthProxyServerAddress)
+                .setApiKey(AppConfiguration.unbluApiKey)
+                .setEntryPath(AppConfiguration.entryPath)
                 .setCustomCookies(cookies).build()
         } ?: unbluController.getConfiguration()
 
