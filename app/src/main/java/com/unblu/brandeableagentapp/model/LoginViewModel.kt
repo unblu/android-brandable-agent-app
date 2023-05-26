@@ -187,6 +187,7 @@ class LoginViewModel : ViewModel() {
 
     fun resetSSOLogin() {
         viewModelScope.launch {
+            _loginState.emit(LoginState.LoggedOut)
             _customTabsOpen.emit(false)
             _showWebview.emit(false)
             _navigationState.emit(null)
