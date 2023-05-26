@@ -22,19 +22,11 @@ import org.json.JSONException
 import org.json.JSONObject
 import java.io.IOException
 import java.io.InputStream
-import java.lang.Boolean
 import java.net.HttpCookie
 import java.net.HttpURLConnection
 import java.net.URL
 import java.nio.charset.Charset
 import java.nio.charset.StandardCharsets
-import kotlin.Any
-import kotlin.ByteArray
-import kotlin.Int
-import kotlin.String
-import kotlin.Throwable
-import kotlin.Throws
-import kotlin.arrayOf
 
 object LoginHelper {
     private const val  UNBLU_REST_PATH: String = "/rest/v3"
@@ -133,7 +125,7 @@ object LoginHelper {
         responseBody: String
     ): Pair<Set<UnbluCookie>?, LoginFailedException?> {
         return if (responseCode == 200) {
-            if (!Boolean.parseBoolean(responseBody)) {
+            if (!responseBody.toBooleanStrict()) {
                 return Pair<Set<UnbluCookie>?, LoginFailedException?>(
                     null,
                     LoginFailedException("Invalid credentials for login")

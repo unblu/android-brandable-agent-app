@@ -42,8 +42,8 @@ Find the `defaultConfig` section and change the `applicationId` to your new pack
 ```groovy
     defaultConfig {
     applicationId "com.example.newpackagename"
-    minSdkVersion 15
-    targetSdkVersion 29
+    minSdkVersion 24
+    targetSdkVersion 33
     versionCode 1
     versionName "1.0"
 }
@@ -190,7 +190,7 @@ In an XML layout file, you would reference the same string resource like this:
 ## Authentication methods
 
 To set the authentication method, adapt the properties of the `AppConfiguration.kt` object.
-There are three ways to authenticate:
+There are three ways to authenticate, and after you've selected the appropriate authentication type , you can modify the code by removing the other unnecessary methods and properties:
 
 - Direct authentication.
 Set the following properties:
