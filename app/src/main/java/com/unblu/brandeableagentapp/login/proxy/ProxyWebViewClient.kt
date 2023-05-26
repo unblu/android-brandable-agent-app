@@ -21,11 +21,20 @@ class ProxyWebViewClient(private val onCookieReceived: (Set<UnbluCookie>?) -> Un
                 val cookieManager = CookieManager.getInstance()
                 val cookiesString = cookieManager.getCookie(AppConfiguration.webAuthProxyServerAddress)
                 Log.i("ProxyWebViewClient", "cookiesString : $cookiesString")
-                val cookies = parseCookies(cookiesString)
-                onCookieReceived(UnbluCookie.from(cookies))
+                cleanupCookies(cookieManager){
+                    Log.i("ProxyWebViewClient", "cleaning up cookies from proxy client")
+                    val cookies = parseCookies(cookiesString)
+                    onCookieReceived(UnbluCookie.from(cookies))
+                }
             }
         }
         return doOverride // Allow the WebView to handle the navigation
+    }
+
+    private fun cleanupCookies(cookieManager: CookieManager, callback : ValueCallback<Boolean>) {
+        cookieManager.removeAllCookies {
+            callback.onReceiveValue(it)
+        }
     }
 
     private fun parseCookies(cookiesString: String): List<HttpCookie> {
