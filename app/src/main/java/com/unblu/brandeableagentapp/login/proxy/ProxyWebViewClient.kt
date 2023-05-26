@@ -11,16 +11,16 @@ class ProxyWebViewClient(private val onCookieReceived: (Set<UnbluCookie>?) -> Un
     override fun shouldOverrideUrlLoading(view: WebView?, request: WebResourceRequest?): Boolean {
         var doOverride = false
         request?.apply {
-            Log.w("ProxyWebViewClient", "shouldOverrideUrlLoading : $url")
+            Log.i("ProxyWebViewClient", "shouldOverrideUrlLoading : $url")
             val urlString = url.toString()
-            if (urlString.contains(AppConfiguration.webAuthProxyServerAddress+"/app/desk")) {
+            if (urlString.contains(AppConfiguration.webAuthProxyServerAddress + AppConfiguration.entryPath + "/desk")) {
                 doOverride = true
                 view?.stopLoading()
 
                 // Get cookies and pass them to the webViewInterface's onComplete method
                 val cookieManager = CookieManager.getInstance()
                 val cookiesString = cookieManager.getCookie(AppConfiguration.webAuthProxyServerAddress)
-                Log.w("ProxyWebViewClient", "cookiesString : $cookiesString")
+                Log.i("ProxyWebViewClient", "cookiesString : $cookiesString")
                 val cookies = parseCookies(cookiesString)
                 onCookieReceived(UnbluCookie.from(cookies))
             }

@@ -73,18 +73,18 @@ class OpenIdAuthController(var context: Context, var storage: UnbluPreferencesSt
     ) {
         if (shouldReAuth()) {
             Log.d(TAG, "Authentication needed")
-            val authRequestBuilder = AuthorizationRequest.Builder(
+            val authRequest = AuthorizationRequest.Builder(
                 oAuthConfiguration,
                 oAuthClientId,
                 ResponseTypeValues.CODE,
                 Uri.parse(oAuthRedirectUri)
             )
                 .setScopes(listOf("openid", "email", "profile"))
-            val authRequest = authRequestBuilder.build()
+                .build();
             val authIntent = authService.getAuthorizationRequestIntent(authRequest)
             launcher.launch(authIntent)
         } else {
-            Log.w(TAG, "Token still valid, will use it")
+            Log.i(TAG, "Token still valid, will use it")
             CoroutineScope(Dispatchers.Default).launch {
                 authState?.accessToken?.let {
                     _eventReceived.emit(TokenEvent.TokenReceived(it));
