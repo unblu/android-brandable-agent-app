@@ -6,12 +6,20 @@ import androidx.work.*
 import com.unblu.brandeableagentapp.AgentApplication
 import com.unblu.brandeableagentapp.data.AppConfiguration
 import com.unblu.brandeableagentapp.login.sso.TokenRefreshWorker.Companion.TOKEN_REQUEST
+import com.unblu.brandeableagentapp.model.AuthenticationType
 import net.openid.appauth.AuthState
 import net.openid.appauth.GrantTypeValues
 import net.openid.appauth.TokenRequest
 import java.util.concurrent.TimeUnit
 
-
+/**
+ *  This class can be deleted in case the selected [AuthenticationType] is not [AuthenticationType.OAuth].
+ *
+ *  This worker is responsible for mantaining the refresh cycle for the authentication worker.
+ *
+ * @property workerParams WorkerParameters
+ * @constructor
+ */
 class TokenRefreshWorker(context: Context, workerParams: WorkerParameters) :
     Worker(context, workerParams) {
     companion object {
@@ -106,5 +114,5 @@ fun createTokenRequest(authState: AuthState): String {
 
 fun printTimeInMinutes(timeInMillis: Long) {
     val minutes = timeInMillis / 60000 // Convert milliseconds to minutes
-    Log.d(TokenRefreshWorker.TAG, "Will refresh in: $minutes")
+    Log.i(TokenRefreshWorker.TAG, "Will refresh in: $minutes")
 }

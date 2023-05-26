@@ -21,6 +21,32 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
+/**
+ * edit this class aaccording to the  [AuthenticationType] that will be used:
+ *  if you are using [AuthenticationType.OAuth]  you should only keep the following properties and methods:
+ *  [LoginViewModel.customTabsOpen]
+ *  [LoginViewModel._customTabsOpen]
+ * [LoginViewModel.resetSSOLogin]
+ * [LoginViewModel.launchSSO]
+ *
+ * if you are using [AuthenticationType.Direct]:
+ *  [LoginViewModel.password]
+ *  [LoginViewModel.username]
+ *  [LoginViewModel.passwordVisiblity]
+ *  [LoginViewModel._passwordVisiblity]
+ *  [LoginViewModel.startUnblu]
+ *  [LoginViewModel.login]
+ *  [LoginViewModel.setPasswordVisiblity]
+ *
+ * Finalliy if you are using [AuthenticationType.WebProxy]
+ *  [LoginViewModel.startUnblu]
+ *  [LoginViewModel._showWebview]
+ *  [LoginViewModel.showWebview]
+ *  [LoginViewModel.onCookieReceived]
+ *  [LoginViewModel.launchSSO]
+ *
+ *  then you can delete the properties/methods that refer to the other authentication types and it's subsequent references.
+ */
 class LoginViewModel : ViewModel() {
     private lateinit var unbluController: UnbluController
     private val _navigationState = MutableStateFlow<NavigationState?>(null)
@@ -28,12 +54,17 @@ class LoginViewModel : ViewModel() {
     private val _loginState = MutableStateFlow<LoginState>(LoginState.LoggedOut)
     val loginState: StateFlow<LoginState> = _loginState
     private val resources = CompositeDisposable()
+
     //oAuth
     private val _customTabsOpen = MutableStateFlow(false)
     val customTabsOpen: StateFlow<Boolean> = _customTabsOpen
+
     //WebProxy
     private val _showWebview = MutableStateFlow(false)
     val showWebview: StateFlow<Boolean> = _showWebview
+    val onCookieReceived: (Set<UnbluCookie>?) -> Unit = { cookies ->
+        startUnblu(cookies)
+    }
     //Direct
     val password = mutableStateOf("harmless-squire-spotter")
     val username = mutableStateOf("superadmin")
@@ -42,12 +73,6 @@ class LoginViewModel : ViewModel() {
     private val _passwordVisiblity = MutableStateFlow(false)
     val passwordVisiblity: StateFlow<Boolean> = _passwordVisiblity
 
-    //SSO proxy login
-    val onCookieReceived: (Set<UnbluCookie>?) -> Unit = { cookies ->
-        startUnblu(cookies)
-    }
-
-    //SSO proxy login
     fun startUnblu(cookies: Set<UnbluCookie>?) {
         viewModelScope.launch {
             _showWebview.emit(false)
@@ -99,6 +124,7 @@ class LoginViewModel : ViewModel() {
         })
     }
 
+
     fun login(username: String, password: String) {
         if (loginState.value.isLoggingIn()) return
         val user = validateUsername(username)
@@ -113,7 +139,7 @@ class LoginViewModel : ViewModel() {
                     username,
                     password,
                     { cookies ->
-                        unbluController.getPreferencesStorage().put(UNBLU_USERNAME,username)
+                        unbluController.getPreferencesStorage().put(UNBLU_USERNAME, username)
                         startUnblu(cookies)
                     },
                     { error ->
@@ -124,37 +150,12 @@ class LoginViewModel : ViewModel() {
         }
     }
 
-    fun launchSSO() {
-        viewModelScope.launch {
-            _loginState.emit(LoginState.LoggingIn)
-        }
-        viewModelScope.launch {
-            if (AppConfiguration.authType is AuthenticationType.OAuth)
-                _customTabsOpen.emit(true)
-            else
-                _showWebview.emit(true)
-        }
+    fun onPasswordChange(newPassword: String) {
+        password.value = newPassword
     }
 
-    fun setUnbluController(unbluController: UnbluController) {
-        this.unbluController = unbluController
-        if(AppConfiguration.authType  == AuthenticationType.Direct)
-            unbluController.getPreferencesStorage().get(UNBLU_USERNAME)?.apply {
-                onUsernameChange(this)
-            }
-    }
-
-    override fun onCleared() {
-        resources.clear()
-        super.onCleared()
-    }
-
-    fun stopUnblu() {
-        unbluController.stop {
-            viewModelScope.launch {
-                doResetLoginState()
-            }
-        }
+    fun onUsernameChange(newUsername: String) {
+        username.value = newUsername
     }
 
     fun setPasswordVisiblity(show: Boolean) {
@@ -163,9 +164,25 @@ class LoginViewModel : ViewModel() {
         }
     }
 
-    private suspend fun doResetLoginState() {
-        _navigationState.emit(null)
-        _loginState.emit(LoginState.LoggedOut)
+    fun launchSSO() {
+        viewModelScope.launch {
+            _loginState.emit(LoginState.LoggingIn)
+        }
+        viewModelScope.launch {
+            /**
+             * edit this code aaccording to the  [AuthenticationType]
+             *  if you are using [AuthenticationType.OAuth] replace it with :
+             *     _customTabsOpen.emit(true)
+             *
+             * Otherwise replace it with:
+             *   _showWebview.emit(true)
+             */
+
+            if (AppConfiguration.authType is AuthenticationType.OAuth)
+                _customTabsOpen.emit(true)
+            else
+                _showWebview.emit(true)
+        }
     }
 
     fun resetSSOLogin() {
@@ -176,16 +193,31 @@ class LoginViewModel : ViewModel() {
         }
     }
 
-
-    fun onPasswordChange(newPassword: String) {
-        password.value = newPassword
+    override fun onCleared() {
+        resources.clear()
+        super.onCleared()
     }
 
-
-    fun onUsernameChange(newUsername: String) {
-        username.value = newUsername
+    private suspend fun doResetLoginState() {
+        _navigationState.emit(null)
+        _loginState.emit(LoginState.LoggedOut)
     }
 
+    fun stopUnblu() {
+        unbluController.stop {
+            viewModelScope.launch {
+                doResetLoginState()
+            }
+        }
+    }
+
+    fun setUnbluController(unbluController: UnbluController) {
+        this.unbluController = unbluController
+        if (AppConfiguration.authType == AuthenticationType.Direct)
+            unbluController.getPreferencesStorage().get(UNBLU_USERNAME)?.apply {
+                onUsernameChange(this)
+            }
+    }
 }
 
 private fun LoginState?.isLoggingIn(): Boolean {

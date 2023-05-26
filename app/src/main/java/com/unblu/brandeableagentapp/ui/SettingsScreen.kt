@@ -22,6 +22,9 @@ import com.unblu.brandeableagentapp.model.SettingsModel
 import com.unblu.brandeableagentapp.model.authTypeFromName
 import com.unblu.brandeableagentapp.nav.NavRoute
 
+/**
+ * This screen is useful for development purposes, should be deleted when no longer needed
+ */
 @SuppressLint("ServiceCast")
 @Composable
 fun SettingsScreen(

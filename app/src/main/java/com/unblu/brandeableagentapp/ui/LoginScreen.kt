@@ -29,11 +29,17 @@ import androidx.navigation.ActivityNavigatorExtras
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.unblu.brandeableagentapp.R
+import com.unblu.brandeableagentapp.model.AuthenticationType
 import com.unblu.brandeableagentapp.model.LoginState
 import com.unblu.brandeableagentapp.model.LoginViewModel
 import com.unblu.brandeableagentapp.model.NavigationState
 import com.unblu.brandeableagentapp.nav.NavRoute
 
+/**
+ *  This class is used in case the login type scenario is [AuthenticationType.Direct], if not you can delete this class and references all together
+ * @param navController NavHostController
+ * @param viewModel LoginViewModel
+ */
 
 @Composable
 fun LoginScreen(navController: NavHostController, viewModel: LoginViewModel) {

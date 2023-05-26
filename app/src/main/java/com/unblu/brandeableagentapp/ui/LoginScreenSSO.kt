@@ -1,7 +1,6 @@
 package com.unblu.brandeableagentapp.ui
 
 import android.app.Activity
-import android.graphics.Color
 import android.util.Log
 import android.webkit.WebView
 import androidx.compose.animation.AnimatedVisibility
@@ -39,9 +38,13 @@ import com.unblu.brandeableagentapp.model.AuthenticationType
 import com.unblu.brandeableagentapp.model.LoginState
 import com.unblu.brandeableagentapp.model.LoginViewModel
 import com.unblu.brandeableagentapp.model.NavigationState
-import com.unblu.brandeableagentapp.nav.NavRoute
 import com.unblu.brandeableagentapp.util.CookieUtil
 
+/**
+ *  This class is used in case the login type scenario is [AuthenticationType.WebProxy] or [AuthenticationType.OAuth] , if not you can delete this class and references all together
+ * @param navController NavHostController
+ * @param viewModel LoginViewModel
+ */
 @Composable
 fun LoginScreenSSO(navController: NavHostController, viewModel: LoginViewModel) {
     val snackbarHostState = remember { SnackbarHostState() }
@@ -52,18 +55,18 @@ fun LoginScreenSSO(navController: NavHostController, viewModel: LoginViewModel) 
 
     Box(modifier = Modifier.fillMaxSize()) {
         // Login UI
-        if (!showWebview) {
-            Surface(color = backgroundColor) {
-                LoginUI(viewModel, navController)
-            }
-        }
-        else if(AppConfiguration.authType is AuthenticationType.WebProxy)
+        Surface(color = backgroundColor) {
+            LoginUI(viewModel, navController)
+
+            /**
+             *  You can delete this [AnimatedVisibility] and its children if the [AuthenticationType] is [AuthenticationType.OAuth]
+             */
+
             AnimatedVisibility(
                 visible = showWebview,
                 enter = slideInVertically(initialOffsetY = { it }),
                 exit = slideOutVertically(targetOffsetY = { it }),
-            ){
-
+            ) {
                 Column(modifier = Modifier.fillMaxSize()) {
                     TopAppBar(
                         title = {},
@@ -78,18 +81,19 @@ fun LoginScreenSSO(navController: NavHostController, viewModel: LoginViewModel) 
                     AndroidView(
                         modifier = Modifier.fillMaxSize(),
                         factory = { context ->
-                                    val webView = WebView(context).apply {
-                                        webViewClient = ProxyWebViewClient(viewModel.onCookieReceived)
-                                }
-                                CookieUtil.clear{
-                                   webView.clearCache(true)
-                                    webView.loadUrl(AppConfiguration.webAuthProxyServerAddress)
-                                }
-                                webView
+                            val webView = WebView(context).apply {
+                                webViewClient = ProxyWebViewClient(viewModel.onCookieReceived)
+                            }
+                            CookieUtil.clear {
+                                webView.clearCache(true)
+                                webView.loadUrl(AppConfiguration.webAuthProxyServerAddress)
+                            }
+                            webView
                         }
                     )
                 }
             }
+        }
     }
 
     LaunchedEffect(viewModel.navigationState) {

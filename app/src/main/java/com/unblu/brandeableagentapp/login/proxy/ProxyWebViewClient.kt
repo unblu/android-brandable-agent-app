@@ -3,9 +3,16 @@ package com.unblu.brandeableagentapp.login.proxy
 import android.util.Log
 import android.webkit.*
 import com.unblu.brandeableagentapp.data.AppConfiguration
+import com.unblu.brandeableagentapp.model.AuthenticationType
 import com.unblu.sdk.core.configuration.UnbluCookie
 import java.net.HttpCookie
 
+/**
+ * This class can be deleted in case the selected [AuthenticationType] is not [AuthenticationType.WebProxy].
+ * If so, make sure you also delete the folder in the project.
+ * @property onCookieReceived Function1<Set<UnbluCookie>?, Unit>
+ * @constructor
+ */
 class ProxyWebViewClient(private val onCookieReceived: (Set<UnbluCookie>?) -> Unit) : WebViewClient() {
 
     override fun shouldOverrideUrlLoading(view: WebView?, request: WebResourceRequest?): Boolean {

@@ -34,14 +34,22 @@ import java.util.*
 
 
 class MainActivity : ComponentActivity() {
+    private val compositeDisposable = CompositeDisposable()
     private val unbluController: UnbluController
         get() = (application as AgentApplication).getUnbluController()
     private lateinit var loginViewModel: LoginViewModel
     private lateinit var unbluScreenViewModel: UnbluScreenViewModel
-    private lateinit var signInLauncher: ActivityResultLauncher<Intent>
-    val compositeDisposable = CompositeDisposable()
-    private lateinit var openIdAuthController: OpenIdAuthController
     private lateinit var viewModelProvider : ViewModelProvider
+
+    /**
+     *  you should only keep this property if the selected [AuthenticationType] is  [AuthenticationType.OAuth]
+     */
+    private lateinit var signInLauncher: ActivityResultLauncher<Intent>
+    /**
+     *  you should only keep this property if the selected [AuthenticationType] is  [AuthenticationType.OAuth]
+     */
+    private lateinit var openIdAuthController: OpenIdAuthController
+
     @OptIn(ExperimentalAnimationApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -91,10 +99,22 @@ class MainActivity : ComponentActivity() {
                 }
             }
         )
+
+        /**
+         *  you should only keep this code if the selected [AuthenticationType] is  [AuthenticationType.OAuth]
+         */
         if (AppConfiguration.authType == AuthenticationType.OAuth)
             configureOAuth()
 
+        /**
+         *  delete the block below if the [AuthenticationType] is [AuthenticationType.Direct]
+         */
         if(unbluController.getHasUiShowRequestValueAndReset()){
+            /**
+             *  you should edit this code according to the [AuthenticationType]
+             *  [AuthenticationType.OAuth] : keep 'openIdAuthController.startSignIn(signInLauncher)'
+             *  [AuthenticationType.WebProxy] : keep 'loginViewModel.launchSSO()'
+             */
             when(AppConfiguration.authType){
                 AuthenticationType.OAuth -> openIdAuthController.startSignIn(signInLauncher)
                 AuthenticationType.WebProxy -> loginViewModel.launchSSO()
@@ -113,10 +133,14 @@ class MainActivity : ComponentActivity() {
         loginViewModel = viewModelProvider[LoginViewModel::class.java]
         loginViewModel.setUnbluController(unbluController)
         unbluScreenViewModel = viewModelProvider[UnbluScreenViewModel::class.java]
+
         val settingsViewModel = viewModelProvider[SettingsViewModel::class.java]
         settingsViewModel.fetchSettingsModel((application as AgentApplication).getUnbluPrefs())
     }
 
+    /**
+     *  you should only keep this function if the selected [AuthenticationType] is  [AuthenticationType.OAuth]
+     */
     private fun configureOAuth() {
             openIdAuthController = OpenIdAuthController(this, (application as AgentApplication).getUnbluPrefs())
             configSignIn()
@@ -149,6 +173,9 @@ class MainActivity : ComponentActivity() {
 
     }
 
+    /**
+     *  you should only keep this function if the selected [AuthenticationType] is  [AuthenticationType.OAuth]
+     */
     private fun configSignIn() {
         signInLauncher = registerForActivityResult(
             ActivityResultContracts.StartActivityForResult(),
@@ -156,6 +183,9 @@ class MainActivity : ComponentActivity() {
         )
     }
 
+    /**
+     *  you should only keep this function if the selected [AuthenticationType] is  [AuthenticationType.OAuth]
+     */
     private fun handleSignInResult(result: ActivityResult) {
         result.data
             ?.apply { openIdAuthController.handleActivityResult(result.resultCode, this) }

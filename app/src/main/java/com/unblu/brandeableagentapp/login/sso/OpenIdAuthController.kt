@@ -11,6 +11,7 @@ import com.unblu.brandeableagentapp.data.AppConfiguration.oAuthClientId
 import com.unblu.brandeableagentapp.data.AppConfiguration.oAuthEndpoint
 import com.unblu.brandeableagentapp.data.AppConfiguration.oAuthRedirectUri
 import com.unblu.brandeableagentapp.data.AppConfiguration.oAuthTokenEndpoint
+import com.unblu.brandeableagentapp.model.AuthenticationType
 import com.unblu.brandeableagentapp.model.TokenEvent
 import com.unblu.sdk.core.configuration.UnbluPreferencesStorage
 import com.unblu.sdk.core.internal.utils.Logger
@@ -24,7 +25,20 @@ import net.openid.appauth.*
 import net.openid.appauth.AuthorizationException.GeneralErrors
 import net.openid.appauth.AuthorizationService.TokenResponseCallback
 
-
+/**
+ *  *This class can be deleted in case the selected [AuthenticationType] is not [AuthenticationType.OAuth].
+ *
+ *  Controller for login/authentication through OAuth
+ *
+ * @property context Context
+ * @property storage UnbluPreferencesStorage
+ * @property authState AuthState?
+ * @property authService AuthorizationService
+ * @property _eventReceived MutableSharedFlow<TokenEvent>
+ * @property eventReceived SharedFlow<TokenEvent>
+ * @property tokenResponseCallback TokenResponseCallback
+ * @constructor
+ */
 class OpenIdAuthController(var context: Context, var storage: UnbluPreferencesStorage) {
 
     private var authState: AuthState? = null
