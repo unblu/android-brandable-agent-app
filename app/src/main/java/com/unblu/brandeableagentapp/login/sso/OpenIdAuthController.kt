@@ -1,4 +1,4 @@
-package com.unblu.brandeableagentapp.login.sso.oauth
+package com.unblu.brandeableagentapp.login.sso
 
 import android.app.Activity
 import android.content.Context
@@ -6,12 +6,12 @@ import android.content.Intent
 import android.net.Uri
 import android.util.Log
 import androidx.activity.result.ActivityResultLauncher
-import com.unblu.brandeableagentapp.model.TokenEvent
 import com.unblu.brandeableagentapp.R
-import com.unblu.brandeableagentapp.data.AppConfiguration.oAuthEndpoint
 import com.unblu.brandeableagentapp.data.AppConfiguration.oAuthClientId
+import com.unblu.brandeableagentapp.data.AppConfiguration.oAuthEndpoint
 import com.unblu.brandeableagentapp.data.AppConfiguration.oAuthRedirectUri
 import com.unblu.brandeableagentapp.data.AppConfiguration.oAuthTokenEndpoint
+import com.unblu.brandeableagentapp.model.TokenEvent
 import com.unblu.sdk.core.configuration.UnbluPreferencesStorage
 import com.unblu.sdk.core.internal.utils.Logger
 import io.reactivex.rxjava3.annotations.NonNull
@@ -138,6 +138,7 @@ class OpenIdAuthController(var context: Context, var storage: UnbluPreferencesSt
             )
         } else {
             Log.e(TAG, "Authorization failed", authException)
+            tokenResponseCallback.onTokenRequestCompleted(null, authException)
         }
     }
 

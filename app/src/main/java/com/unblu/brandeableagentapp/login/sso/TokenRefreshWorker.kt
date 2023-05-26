@@ -1,11 +1,11 @@
-package com.unblu.brandeableagentapp.login.sso.oauth
+package com.unblu.brandeableagentapp.login.sso
 
 import android.content.Context
 import android.util.Log
 import androidx.work.*
 import com.unblu.brandeableagentapp.AgentApplication
 import com.unblu.brandeableagentapp.data.AppConfiguration
-import com.unblu.brandeableagentapp.login.sso.oauth.TokenRefreshWorker.Companion.TOKEN_REQUEST
+import com.unblu.brandeableagentapp.login.sso.TokenRefreshWorker.Companion.TOKEN_REQUEST
 import net.openid.appauth.AuthState
 import net.openid.appauth.GrantTypeValues
 import net.openid.appauth.TokenRequest

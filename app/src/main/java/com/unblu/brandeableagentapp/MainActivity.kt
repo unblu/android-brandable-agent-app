@@ -18,7 +18,7 @@ import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.unblu.brandeableagentapp.api.UnbluController
 import com.unblu.brandeableagentapp.data.AppConfiguration
-import com.unblu.brandeableagentapp.login.sso.oauth.OpenIdAuthController
+import com.unblu.brandeableagentapp.login.sso.OpenIdAuthController
 import com.unblu.brandeableagentapp.model.*
 import com.unblu.brandeableagentapp.nav.NavGraph
 import com.unblu.brandeableagentapp.ui.theme.BrandeableAgentAppTheme

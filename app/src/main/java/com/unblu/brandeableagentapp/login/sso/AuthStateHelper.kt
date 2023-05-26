@@ -1,4 +1,4 @@
-package com.unblu.brandeableagentapp.login.sso.oauth
+package com.unblu.brandeableagentapp.login.sso
 
 import com.unblu.sdk.core.configuration.UnbluPreferencesStorage
 import net.openid.appauth.AuthState
