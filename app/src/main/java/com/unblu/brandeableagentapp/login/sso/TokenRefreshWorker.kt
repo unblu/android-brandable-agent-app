@@ -29,8 +29,6 @@ class TokenRefreshWorker(context: Context, workerParams: WorkerParameters) :
     companion object {
         const val TAG = "TokenRefreshWorker"
         const val TOKEN_REQUEST = "token_request"
-        private val _onTokenUpdate: MutableSharedFlow<String> = MutableSharedFlow(replay = 0)
-        val onTokenUpdate: SharedFlow<String> = _onTokenUpdate
     }
 
     private var workerParams: WorkerParameters

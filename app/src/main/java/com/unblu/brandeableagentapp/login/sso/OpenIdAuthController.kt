@@ -57,8 +57,7 @@ class OpenIdAuthController(var application: AgentApplication) {
             Dispatchers.Default
         )
             .launch {
-                TokenRefreshWorker
-                    .onTokenUpdate
+                    onTokenUpdate
                     .collectLatest { token ->
                         _eventReceived.emit(TokenEvent.TokenReceived(token))
                     }
@@ -204,6 +203,8 @@ class OpenIdAuthController(var application: AgentApplication) {
 
     companion object {
         const val TAG = "OpenIdAuthController"
+        private val _onTokenUpdate: MutableSharedFlow<String> = MutableSharedFlow(replay = 0)
+        val onTokenUpdate: SharedFlow<String> = _onTokenUpdate
         val oAuthConfiguration = AuthorizationServiceConfiguration(
             Uri.parse(oAuthEndpoint),
             Uri.parse(oAuthTokenEndpoint)
