@@ -30,11 +30,10 @@ Make sure the *Flattened* option is unchecked under the dropdown menu in the *Pr
 * Android Studio highlights any errors that result from to this change.
 Follow the recommended fixes.
 
-Note that if you've already published your app on the Google Play Store under a specific package name, changing it will make Google Play treat it as a completely new app.
-
 ### Step 3: Update the application ID
 
 The application ID uniquely identifies your app on the device and in the Google Play Store, so changing this is often required when renaming the app.
+Note that if you've already published your app on the Google Play Store under a specific application ID, changing it will make Google Play treat it as a completely new app.
 
 Go to Gradle `Scripts > build.gradle` (Module: app).
 Find the `defaultConfig` section and change the `applicationId` to your new package name.
