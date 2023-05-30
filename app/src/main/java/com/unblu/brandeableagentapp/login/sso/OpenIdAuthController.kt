@@ -42,6 +42,7 @@ import net.openid.appauth.AuthorizationService.TokenResponseCallback
  */
 class OpenIdAuthController(var application: AgentApplication) {
 
+
     private var authState: AuthState? = null
     private val authService: AuthorizationService
     private val _eventReceived = MutableSharedFlow<TokenEvent>()
@@ -53,14 +54,15 @@ class OpenIdAuthController(var application: AgentApplication) {
         authService = AuthorizationService(application)
 
         CoroutineScope(
-            Dispatchers.Default)
+            Dispatchers.Default
+        )
             .launch {
-                application
+                TokenRefreshWorker
                     .onTokenUpdate
-                    .collectLatest { token->
+                    .collectLatest { token ->
                         _eventReceived.emit(TokenEvent.TokenReceived(token))
                     }
-        }
+            }
     }
 
     private val tokenResponseCallback: TokenResponseCallback =
@@ -70,16 +72,19 @@ class OpenIdAuthController(var application: AgentApplication) {
                 authState?.let { authState ->
                     authState.update(response, ex)
                     authState.accessToken?.let { accessToken ->
-                        if (authState.isAuthorized)
+                        if (authState.isAuthorized) {
                             scheduleTokenRefresh(application, authState)
-                        // Handle successful token refresh here
-                        CoroutineScope(Dispatchers.Default).launch {
-                            Logger.d(TAG, "accessToken: $accessToken")
-                            _eventReceived.emit(TokenEvent.TokenReceived(accessToken))
-                        }
+                            storeAuthState(authState, application.getUnbluPrefs())
+                            // Handle successful token refresh here
+                            CoroutineScope(Dispatchers.Default).launch {
+                                Logger.d(TAG, "accessToken: $accessToken")
+                                _eventReceived.emit(TokenEvent.TokenReceived(accessToken))
+                            }
+                        } else
+                            Log.w(TAG, " token not refreshed: AuthState is not authorized")
                     }
                 }
-                Log.d("MainActivity", " token refreshed: " + response.refreshToken)
+                Log.d(TAG, " token refreshed: " + response.refreshToken)
             } else {
                 // Handle failed token refresh here
                 Log.e("MainActivity", "Failed to refresh access token", ex)
@@ -119,7 +124,8 @@ class OpenIdAuthController(var application: AgentApplication) {
     }
 
     private fun shouldReAuth(): Boolean {
-        return authState?.accessTokenExpirationTime?.let { time -> time - System.currentTimeMillis() <= 0 } ?: true
+        return authState?.accessTokenExpirationTime?.let { time -> time - System.currentTimeMillis() <= 0 }
+            ?: true
     }
 
     fun handleActivityResult(resultCode: Int, @NonNull data: Intent?) {
@@ -180,16 +186,19 @@ class OpenIdAuthController(var application: AgentApplication) {
             .build()
     }
 
-    fun refreshAccessToken(tokenRequest: TokenRequest, callback: TokenResponseCallback) {
+    fun refreshAccessToken(tokenRequest: TokenRequest) {
         authState?.let { authState ->
             if (authState.refreshToken == null) {
                 Log.e(TAG, "No refresh token available")
-                callback.onTokenRequestCompleted(null, GeneralErrors.ID_TOKEN_VALIDATION_ERROR)
+                tokenResponseCallback.onTokenRequestCompleted(
+                    null,
+                    GeneralErrors.ID_TOKEN_VALIDATION_ERROR
+                )
                 return
             }
-            authService.performTokenRequest(tokenRequest, callback)
+            authService.performTokenRequest(tokenRequest, tokenResponseCallback)
         } ?: run {
-            callback.onTokenRequestCompleted(null, AuthorizationException.TokenRequestErrors.OTHER)
+            Log.e(TAG, "No AuthState available, refresh failed")
         }
     }
 
