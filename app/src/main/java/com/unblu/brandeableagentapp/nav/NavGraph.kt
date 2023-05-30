@@ -33,6 +33,7 @@ fun NavGraph(navController: NavHostController, viewModelStore: ViewModelProvider
         //This screen is useful for development purposes, should be deleted when no longer needed
         composable(route = NavRoute.Settings.route, enterTransition = { fadeIn() }, exitTransition = { fadeOut() }) {
             val settingsViewModel = viewModelStore[SettingsViewModel::class.java]
+            loginViewModel.resetSSOLogin()
             SettingsScreen(navController, settingsViewModel.settingsModel){ updatedModel->
                 settingsViewModel.updateSettingsModel(updatedModel)
             }
@@ -48,7 +49,7 @@ fun NavGraph(navController: NavHostController, viewModelStore: ViewModelProvider
         }
 
         composable(route = NavRoute.Unblu.route, enterTransition = { fadeIn() }, exitTransition = { fadeOut() }) {
-            SuccessScreen(navController, successViewModel){
+            SuccessScreen(navController, successViewModel) {
                 loginViewModel.stopUnblu()
                 successViewModel.setShowDialog(false)
             }

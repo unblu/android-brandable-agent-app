@@ -66,7 +66,7 @@ fun SettingsScreen(
                         ),
                         onOptionSelected = { authType ->
                             settings.let { model->
-                                Log.w("SettingsScreen ", "auth type: $authType" )
+                                Log.d("SettingsScreen ", "auth type: $authType" )
                                 val updatedModel = model.copy(authType = authTypeFromName(authType))
                                 updateSettingsModel(updatedModel)
                             }

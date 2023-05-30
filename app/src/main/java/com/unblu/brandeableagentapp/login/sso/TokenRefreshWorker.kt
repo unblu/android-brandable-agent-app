@@ -34,7 +34,7 @@ class TokenRefreshWorker(context: Context, workerParams: WorkerParameters) :
     }
 
     override fun doWork(): Result {
-        val unbluController = (applicationContext as AgentApplication).getUnbluController()
+        val application = applicationContext as AgentApplication
         // Retrieve the stored AuthState
         val authState: AuthState = workerParams.inputData.getString(AUTH_STATE)
             ?.let { data -> AuthState.jsonDeserialize(data) }
@@ -44,29 +44,22 @@ class TokenRefreshWorker(context: Context, workerParams: WorkerParameters) :
             ?.let { data -> TokenRequest.jsonDeserialize(data) }
             ?: kotlin.run { return Result.failure() }
 
-        val unbluPreferencesStorage = (applicationContext as AgentApplication).getUnbluPrefs()
-
         // Refresh the access token
-        val appAuthController =
-            OpenIdAuthController(applicationContext, unbluPreferencesStorage)
+        val appAuthController = OpenIdAuthController(application)
 
         appAuthController.refreshAccessToken(tokenRequest) { response, ex ->
             if (response != null) {
                 // Update the stored AuthState with the new token response
                 authState.update(response, ex)
-                storeAuthState(authState, unbluPreferencesStorage)
                 scheduleTokenRefresh(applicationContext, authState)
-                unbluController.getClient()?.apply {
-                    authState.accessToken?.let {
-                        setAccessToken(authState.accessToken)
-                    } ?: kotlin.run {
-                        Log.w(TAG, "did not receive access token")
-                    }
-                }
-                // Notify App and pass in the new token to the serviceWorker
+                // Notify App, save state and pass in the new token to the serviceWorker
+                application.onAuthStateChange(authState)
+                Log.d(TAG, "Token was updated from the WorkerManager ")
             } else {
-                scheduleTokenRefresh(applicationContext, authState)
+                application.onAuthStateChange(authState)
                 // Handle failed token refresh here
+                scheduleTokenRefresh(applicationContext, authState)
+                Log.d(TAG, "Couldn't refresh token ${ex?.message.let { ":  $it" }}")
             }
         }
 

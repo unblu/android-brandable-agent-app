@@ -54,7 +54,7 @@ class ProxyWebViewClient(private val onCookieReceived: (Set<UnbluCookie>?) -> Un
             if (keyValueSplit.size == 2) {
                 val cookieName = keyValueSplit[0].trim()
                 val cookieValue = keyValueSplit[1].trim().trim { it == '"' }
-                Log.w("ProxyWebViewClient", "keyValueSplit : $cookieName=$cookieValue")
+                Log.d("ProxyWebViewClient", "keyValueSplit : $cookieName=$cookieValue")
                 // Create a new Cookie object and add it to the list
                 val cookie = HttpCookie(cookieName, cookieValue)
                 cookies.add(cookie)

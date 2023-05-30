@@ -113,7 +113,7 @@ fun LoginScreenSSO(navController: NavHostController, viewModel: LoginViewModel) 
                     )
                 }
                 is NavigationState.Failure -> {
-                    Log.w("LoginScreenSSO", "NavigationState.Failure: ${state.message}")
+                    Log.e("LoginScreenSSO", "NavigationState.Failure: ${state.message}")
                     snackbarHostState.showSnackbar("Login failed: ${state.message}")
                 }
                 else -> {

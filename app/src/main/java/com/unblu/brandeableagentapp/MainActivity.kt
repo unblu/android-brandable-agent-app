@@ -90,7 +90,7 @@ class MainActivity : ComponentActivity() {
                     },
                     { error -> Log.e("MainActivity", "Error: ${error.localizedMessage}") }),
             Unblu.onError().subscribe { errorData->
-                Log.w("MainActivity", "session ended: ${errorData.message}")
+                Log.e("MainActivity", "session ended: ${errorData.message}")
                 if ((errorData.errorType == UnbluClientErrorType.AUTHENTICATION) && errorData.message.contains("Forbidden")
                     || errorData.errorType == UnbluClientErrorType.AUTHORIZATION
                     || (errorData.errorType == UnbluClientErrorType.INVALID_URL)
@@ -142,16 +142,17 @@ class MainActivity : ComponentActivity() {
      *  you should only keep this function if the selected [AuthenticationType] is  [AuthenticationType.OAuth]
      */
     private fun configureOAuth() {
-            openIdAuthController = OpenIdAuthController(this, (application as AgentApplication).getUnbluPrefs())
+            openIdAuthController = OpenIdAuthController(application as AgentApplication)
             configSignIn()
             lifecycleScope.launch {
                 openIdAuthController.eventReceived.collect { event ->
                     when (event) {
                         is TokenEvent.TokenReceived -> {
-                            Log.w(MainActivity::javaClass.name, "Got token: ${event.token}")
+                            Log.d(MainActivity::javaClass.name, "Got token: ${event.token}")
                             // Handle token received
                             unbluController.setOAuthToken(event.token)
-                            loginViewModel.startUnblu(null)
+                            if(unbluController.getClient() == null)
+                                loginViewModel.startUnblu(null)
                         }
                         is TokenEvent.ErrorReceived -> {
                             // Handle error received
@@ -162,7 +163,7 @@ class MainActivity : ComponentActivity() {
                 }
             }
 
-            Log.w(MainActivity::javaClass.name, "Will register for activity result")
+            Log.d(MainActivity::javaClass.name, "Will register for activity result")
             lifecycleScope.launch {
                 loginViewModel.customTabsOpen.collect { open ->
                     if(open) {
@@ -193,7 +194,7 @@ class MainActivity : ComponentActivity() {
 
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
-        Log.w("MainActivity", "onNewIntent")
+        Log.d("MainActivity", "onNewIntent")
         intent.apply {
             UnbluApplicationHelper.onNewIntent(this?.extras)
         }

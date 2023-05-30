@@ -1,11 +1,11 @@
 package com.unblu.brandeableagentapp.login.sso
 
 import android.app.Activity
-import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.util.Log
 import androidx.activity.result.ActivityResultLauncher
+import com.unblu.brandeableagentapp.AgentApplication
 import com.unblu.brandeableagentapp.R
 import com.unblu.brandeableagentapp.data.AppConfiguration.oAuthClientId
 import com.unblu.brandeableagentapp.data.AppConfiguration.oAuthEndpoint
@@ -20,6 +20,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import net.openid.appauth.*
 import net.openid.appauth.AuthorizationException.GeneralErrors
@@ -30,7 +31,7 @@ import net.openid.appauth.AuthorizationService.TokenResponseCallback
  *
  *  Controller for login/authentication through OAuth
  *
- * @property context Context
+ * @property application Context
  * @property storage UnbluPreferencesStorage
  * @property authState AuthState?
  * @property authService AuthorizationService
@@ -39,7 +40,7 @@ import net.openid.appauth.AuthorizationService.TokenResponseCallback
  * @property tokenResponseCallback TokenResponseCallback
  * @constructor
  */
-class OpenIdAuthController(var context: Context, var storage: UnbluPreferencesStorage) {
+class OpenIdAuthController(var application: AgentApplication) {
 
     private var authState: AuthState? = null
     private val authService: AuthorizationService
@@ -48,8 +49,18 @@ class OpenIdAuthController(var context: Context, var storage: UnbluPreferencesSt
 
     init {
         //retrieve auth state or create new instance if nothing on the storage
-        authState = getAuthState(storage)
-        authService = AuthorizationService(context)
+        authState = getAuthState(application.getUnbluPrefs())
+        authService = AuthorizationService(application)
+
+        CoroutineScope(
+            Dispatchers.Default)
+            .launch {
+                application
+                    .onTokenUpdate
+                    .collectLatest { token->
+                        _eventReceived.emit(TokenEvent.TokenReceived(token))
+                    }
+        }
     }
 
     private val tokenResponseCallback: TokenResponseCallback =
@@ -60,7 +71,7 @@ class OpenIdAuthController(var context: Context, var storage: UnbluPreferencesSt
                     authState.update(response, ex)
                     authState.accessToken?.let { accessToken ->
                         if (authState.isAuthorized)
-                            scheduleTokenRefresh(context, authState)
+                            scheduleTokenRefresh(application, authState)
                         // Handle successful token refresh here
                         CoroutineScope(Dispatchers.Default).launch {
                             Logger.d(TAG, "accessToken: $accessToken")
@@ -127,7 +138,7 @@ class OpenIdAuthController(var context: Context, var storage: UnbluPreferencesSt
                     Log.w(TAG, message)
                 }
                 CoroutineScope(Dispatchers.Default).launch {
-                    _eventReceived.emit(TokenEvent.ErrorReceived(context.getString(R.string.login_aborted)))
+                    _eventReceived.emit(TokenEvent.ErrorReceived(application.getString(R.string.login_aborted)))
                 }
             }
         } else {
@@ -136,7 +147,7 @@ class OpenIdAuthController(var context: Context, var storage: UnbluPreferencesSt
                 "Login process aborted. It is highly probable that the login page was terminated due to user interaction."
             )
             CoroutineScope(Dispatchers.Default).launch {
-                _eventReceived.emit(TokenEvent.ErrorReceived(context.getString(R.string.login_aborted)))
+                _eventReceived.emit(TokenEvent.ErrorReceived(application.getString(R.string.login_aborted)))
             }
         }
     }

@@ -123,7 +123,6 @@ private fun goBack(
     unbluView: View?,
     navController: NavController
 ) {
-    Log.w("SuccessScreen", "will go back")
     onNavigateBack()
     unbluView?.detachView()
     navController.navigate("login")

@@ -222,6 +222,6 @@ class LoginViewModel : ViewModel() {
 }
 
 private fun LoginState?.isLoggingIn(): Boolean {
-    Log.w("LOGIN STATE", "will return as we are already loggin")
+    Log.d("LOGIN STATE", "will return as we are already loggin")
     return this is LoginState.LoggingIn
 }
