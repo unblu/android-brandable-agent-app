@@ -52,16 +52,6 @@ class OpenIdAuthController(var application: AgentApplication) {
         //retrieve auth state or create new instance if nothing on the storage
         authState = getAuthState(application.getUnbluPrefs())
         authService = AuthorizationService(application)
-
-        CoroutineScope(
-            Dispatchers.Default
-        )
-            .launch {
-                    onTokenUpdate
-                    .collectLatest { token ->
-                        _eventReceived.emit(TokenEvent.TokenReceived(token))
-                    }
-            }
     }
 
     private val tokenResponseCallback: TokenResponseCallback =
@@ -79,14 +69,15 @@ class OpenIdAuthController(var application: AgentApplication) {
                                 Logger.d(TAG, "accessToken: $accessToken")
                                 _eventReceived.emit(TokenEvent.TokenReceived(accessToken))
                             }
-                        } else
+                            Log.d(TAG, " token refreshed: " + response.refreshToken)
+                        } else {
                             Log.w(TAG, " token not refreshed: AuthState is not authorized")
+                        }
                     }
                 }
-                Log.d(TAG, " token refreshed: " + response.refreshToken)
             } else {
                 // Handle failed token refresh here
-                Log.e("MainActivity", "Failed to refresh access token", ex)
+                Log.e(TAG, "Failed to refresh access token", ex)
                 CoroutineScope(Dispatchers.Default).launch {
                     _eventReceived.emit(
                         TokenEvent.ErrorReceived(
@@ -203,8 +194,6 @@ class OpenIdAuthController(var application: AgentApplication) {
 
     companion object {
         const val TAG = "OpenIdAuthController"
-        private val _onTokenUpdate: MutableSharedFlow<String> = MutableSharedFlow(replay = 0)
-        val onTokenUpdate: SharedFlow<String> = _onTokenUpdate
         val oAuthConfiguration = AuthorizationServiceConfiguration(
             Uri.parse(oAuthEndpoint),
             Uri.parse(oAuthTokenEndpoint)
