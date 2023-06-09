@@ -52,16 +52,13 @@ fun LoginScreenSSO(navController: NavHostController, viewModel: LoginViewModel) 
     val showWebview by viewModel.showWebview.collectAsState()
     val toolbarColor = colorResource(id = R.color.login_sso_toolbar_background)
 
-
     Box(modifier = Modifier.fillMaxSize()) {
         // Login UI
         Surface(color = backgroundColor) {
             LoginUI(viewModel, navController)
-
             /**
              *  You can delete this [AnimatedVisibility] and its children if the [AuthenticationType] is [AuthenticationType.OAuth]
              */
-
             AnimatedVisibility(
                 visible = showWebview,
                 enter = slideInVertically(initialOffsetY = { it }),
@@ -93,6 +90,12 @@ fun LoginScreenSSO(navController: NavHostController, viewModel: LoginViewModel) 
                     )
                 }
             }
+            SnackbarHost(
+                hostState = snackbarHostState,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .align(Alignment.BottomCenter)
+            )
         }
     }
 
@@ -171,7 +174,6 @@ fun LoginUI(
                 )
             }
         }
-
         Column(Modifier.weight(2f)) {
             // Login Button
             Box(

@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.android.material.snackbar.Snackbar
 import com.unblu.brandeableagentapp.api.UnbluController
 import com.unblu.brandeableagentapp.data.AppConfiguration
 import com.unblu.brandeableagentapp.login.direct.LoginHelper
@@ -218,6 +219,10 @@ class LoginViewModel : ViewModel() {
             unbluController.getPreferencesStorage().get(UNBLU_USERNAME)?.apply {
                 onUsernameChange(this)
             }
+    }
+
+    fun setErrorMessage(message: String) {
+        _navigationState.value = NavigationState.Failure("Error message: $message")
     }
 }
 

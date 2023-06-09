@@ -16,6 +16,7 @@ const val AUTH_STATE = "auth_state"
 fun getAuthState(unbluPreferencesStorage: UnbluPreferencesStorage) : AuthState {
     return when(val stateData = unbluPreferencesStorage.get(AUTH_STATE)){
         null -> AuthState()
+       "" -> AuthState()
         else-> try {
             AuthState.jsonDeserialize(stateData)
         } catch (e: JSONException) {
@@ -26,4 +27,8 @@ fun getAuthState(unbluPreferencesStorage: UnbluPreferencesStorage) : AuthState {
 
 fun storeAuthState(authState: AuthState, storage: UnbluPreferencesStorage){
     storage.put(AUTH_STATE, authState.jsonSerializeString())
+}
+
+fun deleteAuthState(storage: UnbluPreferencesStorage){
+    storage.put(AUTH_STATE, "")
 }

@@ -20,10 +20,14 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.max
+import androidx.compose.ui.unit.sp
 import androidx.core.app.ActivityOptionsCompat
 import androidx.navigation.ActivityNavigatorExtras
 import androidx.navigation.NavHostController
@@ -34,6 +38,7 @@ import com.unblu.brandeableagentapp.model.LoginState
 import com.unblu.brandeableagentapp.model.LoginViewModel
 import com.unblu.brandeableagentapp.model.NavigationState
 import com.unblu.brandeableagentapp.nav.NavRoute
+import com.unblu.brandeableagentapp.ui.theme.Rubik
 
 /**
  *  This class is used in case the login type scenario is [AuthenticationType.Direct], if not you can delete this class and references all together
@@ -50,7 +55,7 @@ fun LoginScreen(navController: NavHostController, viewModel: LoginViewModel) {
     val passwordVisibility by viewModel.passwordVisiblity.collectAsState()
 
     val screenHeight = LocalConfiguration.current.screenHeightDp.dp
-    val inputAndButtonHeight = screenHeight * 0.07f
+    val inputAndButtonHeight = max(56.dp,screenHeight * 0.06f)
     val backgroundColor = colorResource(id = R.color.login_screen_background)
     val logoColor = colorResource(id = R.color.logo_color)
     val inputBackground = colorResource(id = R.color.input_background_color)
@@ -62,72 +67,80 @@ fun LoginScreen(navController: NavHostController, viewModel: LoginViewModel) {
     val buttonBorderColor = colorResource(id = R.color.login_button_border)
 
     Surface(color = backgroundColor) {
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(16.dp),
-            verticalArrangement = Arrangement.SpaceAround,
-            horizontalAlignment = Alignment.CenterHorizontally
+        Box(
+            modifier = Modifier.fillMaxSize()
         ) {
-            Spacer(modifier = Modifier.height(16.dp))
-            Box(modifier = Modifier.weight(1f))
-             {
-                Column(Modifier.align(Center)){
-                    // Logo
-                    Image(
-                        painter = painterResource(id = R.drawable.logo),
-                        colorFilter = ColorFilter.tint(logoColor),
-                        contentDescription = null,
-                        modifier = Modifier
-                            .align(CenterHorizontally)
-                            .size(128.dp)
-                            .onDoubleClick {
-                                navController.navigate(NavRoute.Settings.route)
-                            }
-                    )
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(16.dp),
+                verticalArrangement = Arrangement.SpaceAround,
+                horizontalAlignment = CenterHorizontally
+            ) {
+                Spacer(modifier = Modifier.height(16.dp))
+                Box(modifier = Modifier.weight(1f))
+                {
+                    Column(Modifier.align(Center)){
+                        // Logo
+                        Image(
+                            painter = painterResource(id = R.drawable.logo),
+                            colorFilter = ColorFilter.tint(logoColor),
+                            contentDescription = null,
+                            modifier = Modifier
+                                .align(CenterHorizontally)
+                                .size(128.dp)
+                                .onDoubleClick {
+                                    navController.navigate(NavRoute.Settings.route)
+                                }
+                        )
 
-                    // Subtitle
-                    Text(
-                        stringResource(R.string.login_subtitle),
-                        modifier = Modifier
-                            .padding(top = 8.dp)
-                    )
-                }
-            }
-
-            Column(Modifier.weight(3f)) {
-                // Username
-                LabeledTextField(
-                    label = stringResource(R.string.login_username_label),
-                    value = username,
-                    onValueChange = viewModel::onUsernameChange,
-                    inputHeight = inputAndButtonHeight,
-                    inputBackground = inputBackground,
-                    borderColor = borderColor,
-                    inputTextColor = inputTextColor
-                )
-
-                Spacer(modifier = Modifier.height(8.dp))
-
-                // Password
-                LabeledTextField(
-                    label = stringResource(R.string.login_password_label),
-                    value = password,
-                    onValueChange = viewModel::onPasswordChange,
-                    inputHeight = inputAndButtonHeight,
-                    inputBackground = inputBackground,
-                    borderColor = borderColor,
-                    inputTextColor = inputTextColor,
-                    visualTransformation = if (passwordVisibility) VisualTransformation.None else PasswordVisualTransformation(),
-                    trailingIcon = {
-                        IconButton(onClick = { viewModel.setPasswordVisiblity(!passwordVisibility) }) {
-                            Icon(
-                                imageVector = if (passwordVisibility) Icons.Default.VisibilityOff else Icons.Default.Visibility,
-                                contentDescription = null
+                        // Subtitle
+                        Text(
+                            stringResource(R.string.login_subtitle),
+                            modifier = Modifier
+                                .padding(top = 8.dp),
+                            style = TextStyle(
+                                fontFamily = Rubik,
+                                fontWeight = FontWeight.Normal,
+                                fontSize = 14.sp
                             )
-                        }
+                        )
                     }
-                )
+                }
+
+                Column(Modifier.weight(3f)) {
+                    // Username
+                    LabeledTextField(
+                        label = stringResource(R.string.login_username_label),
+                        value = username,
+                        onValueChange = viewModel::onUsernameChange,
+                        inputHeight = inputAndButtonHeight,
+                        inputBackground = inputBackground,
+                        borderColor = borderColor,
+                        inputTextColor = inputTextColor
+                    )
+
+                    Spacer(modifier = Modifier.height(8.dp))
+
+                    // Password
+                    LabeledTextField(
+                        label = stringResource(R.string.login_password_label),
+                        value = password,
+                        onValueChange = viewModel::onPasswordChange,
+                        inputHeight = inputAndButtonHeight,
+                        inputBackground = inputBackground,
+                        borderColor = borderColor,
+                        inputTextColor = inputTextColor,
+                        visualTransformation = if (passwordVisibility) VisualTransformation.None else PasswordVisualTransformation(),
+                        trailingIcon = {
+                            IconButton(onClick = { viewModel.setPasswordVisiblity(!passwordVisibility) }) {
+                                Icon(
+                                    imageVector = if (passwordVisibility) Icons.Default.VisibilityOff else Icons.Default.Visibility,
+                                    contentDescription = null
+                                )
+                            }
+                        }
+                    )
 
                     Spacer(modifier = Modifier.height(16.dp))
 
@@ -148,7 +161,11 @@ fun LoginScreen(navController: NavHostController, viewModel: LoginViewModel) {
                                     modifier = Modifier
                                         .fillMaxWidth()
                                         .height(inputAndButtonHeight)
-                                        .border(1.dp, buttonBorderColor, shape = RoundedCornerShape(4.dp))
+                                        .border(
+                                            1.dp,
+                                            buttonBorderColor,
+                                            shape = RoundedCornerShape(4.dp)
+                                        )
                                 ) {
                                     CircularProgressIndicator(
                                         modifier = Modifier
@@ -170,16 +187,27 @@ fun LoginScreen(navController: NavHostController, viewModel: LoginViewModel) {
                                     modifier = Modifier
                                         .fillMaxWidth()
                                         .height(inputAndButtonHeight)
-                                        .border(1.dp, buttonBorderColor, shape = RoundedCornerShape(4.dp))
+                                        .border(
+                                            1.dp,
+                                            buttonBorderColor,
+                                            shape = RoundedCornerShape(4.dp)
+                                        )
                                 ) {
                                     Text(stringResource(R.string.login_button))
                                 }
                             }
                         }
                     }
-                    SnackbarHost(snackbarHostState)
+
                 }
             }
+            SnackbarHost(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .align(Alignment.BottomCenter),
+                hostState = snackbarHostState
+            )
+        }
     }
     LaunchedEffect(viewModel.navigationState) {
         viewModel.navigationState.collect { state ->
@@ -207,7 +235,31 @@ fun LoginScreen(navController: NavHostController, viewModel: LoginViewModel) {
 }
 
 
-@Preview(showBackground = true)
+@Preview(
+    name = "Samsung Galaxy A51 Preview",
+    widthDp = 392,  // approximate width in dp (1080px / 2.75)
+    heightDp = 873  // approximate height in dp (2400px / 2.75)
+)
+@Preview(
+    name = "Samsung Galaxy S20 Ultra Preview",
+    widthDp = 392,  // approximate width in dp (1440px / 3.5)
+    heightDp = 914  // approximate height in dp (3200px / 3.5)
+)
+@Preview(
+    name = "Xiaomi Mi 10 Pro Preview",
+    widthDp = 394,  // approximate width in dp (1080px / 2.75)
+    heightDp = 853  // approximate height in dp (2340px / 2.75)
+)
+@Preview(
+    name = "Oppo Find X2 Pro Preview",
+    widthDp = 416,  // approximate width in dp (1440px / 3.5)
+    heightDp = 906  // approximate height in dp (3168px / 3.5)
+)
+@Preview(
+    name = "OnePlus 8 Pro Preview",
+    widthDp = 416,  // approximate width in dp (1440px / 3.5)
+    heightDp = 906  // approximate height in dp (3168px / 3.5)
+)
 @Composable
 fun LoginScreenPreview() {
     val navController = rememberNavController()

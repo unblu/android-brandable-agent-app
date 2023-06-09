@@ -15,12 +15,16 @@ import androidx.compose.ui.composed
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.unblu.brandeableagentapp.R
 import com.unblu.brandeableagentapp.model.AuthenticationType
+import com.unblu.brandeableagentapp.ui.theme.Rubik
 
 @Composable
 fun LabeledTextField(
@@ -32,7 +36,7 @@ fun LabeledTextField(
     inputBackground: Color,
     borderColor: Color,
     inputTextColor: Color,
-    maxLines : Int = 1,
+    singleLine : Boolean = true,
     visualTransformation: VisualTransformation = VisualTransformation.None,
     trailingIcon: (@Composable () -> Unit)? = null
 ) {
@@ -43,7 +47,12 @@ fun LabeledTextField(
     )
     {
         Text(
-            text = label
+            text = label,
+            style = TextStyle(
+                fontFamily = Rubik,
+                fontWeight = FontWeight.Normal,
+                fontSize = 14.sp
+            )
         )
         Spacer(Modifier.width(4.dp))
         OutlinedTextField(
@@ -56,8 +65,10 @@ fun LabeledTextField(
                 .background(color = inputBackground),
             visualTransformation = visualTransformation,
             trailingIcon = trailingIcon,
-            textStyle = TextStyle(fontSize = (inputHeight.value*0.30).sp),
-            maxLines = 1,
+            textStyle = TextStyle(
+                fontFamily = Rubik,
+                fontSize = (inputHeight.value*0.35).sp),
+            singleLine = singleLine,
             colors = TextFieldDefaults.outlinedTextFieldColors(
                 textColor = inputTextColor,
                 cursorColor = inputTextColor,
@@ -151,7 +162,7 @@ fun SettingsTextField(
         inputBackground = Color.White,
         borderColor = Color.Gray,
         inputTextColor = Color.Black,
-        maxLines = 2,
+        singleLine = false,
     )
 }
 
@@ -197,5 +208,27 @@ fun Modifier.onDoubleClick(onDoubleClick: () -> Unit): Modifier = composed {
             onDoubleClick.invoke()
         }
         lastClickTimestamp.value = currentTimestamp
+    }
+}
+
+@Preview(
+    name = "Samsung Galaxy A51 Preview",
+    widthDp = 392,  // approximate width in dp (1080px / 2.75)
+    heightDp = 873  // approximate height in dp (2400px / 2.75)
+)
+@Composable
+fun GalaxyA51Preview() {
+    Surface {
+        LabeledTextField(
+            label = "Label",
+            value = "Input",
+            onValueChange = {},
+            modifier = Modifier.padding(16.dp),
+            inputHeight = 56.dp,
+            inputBackground = Color.LightGray,
+            borderColor = Color.Gray,
+            inputTextColor = Color.Black,
+            singleLine = true
+        )
     }
 }

@@ -26,20 +26,32 @@ fun NavGraph(navController: NavHostController, viewModelStore: ViewModelProvider
     navController.enableOnBackPressed(false)
 
     AnimatedNavHost(navController, startDestination = NavRoute.Splash.route) {
-        composable(NavRoute.Splash.route, enterTransition = {  fadeIn() }, exitTransition = {  fadeOut() }) {
+        composable(
+            NavRoute.Splash.route,
+            enterTransition = { fadeIn() },
+            exitTransition = { fadeOut() }) {
             SplashScreen(navController)
         }
 
         //This screen is useful for development purposes, should be deleted when no longer needed
-        composable(route = NavRoute.Settings.route, enterTransition = { fadeIn() }, exitTransition = { fadeOut() }) {
+        composable(
+            route = NavRoute.Settings.route,
+            enterTransition = { fadeIn() },
+            exitTransition = { fadeOut() }) {
             val settingsViewModel = viewModelStore[SettingsViewModel::class.java]
             loginViewModel.resetSSOLogin()
-            SettingsScreen(navController, settingsViewModel.settingsModel){ updatedModel->
+            SettingsScreen(navController, settingsViewModel.settingsModel,
+                {
+                    settingsViewModel.saveModel()
+                }) { updatedModel ->
                 settingsViewModel.updateSettingsModel(updatedModel)
             }
         }
 
-        composable(route = NavRoute.Login.route, enterTransition = { fadeIn() }, exitTransition = { fadeOut() }) {
+        composable(
+            route = NavRoute.Login.route,
+            enterTransition = { fadeIn() },
+            exitTransition = { fadeOut() }) {
             //Edit this according to the AuthenticationType you will be using, if AuthenticationType.Direct just keep "LoginScreen(navController, loginViewModel)", if not keep LoginScreenSSO(navController, loginViewModel) and delete the other lines
             if (AppConfiguration.authType !is AuthenticationType.Direct) {
                 LoginScreenSSO(navController, loginViewModel)
@@ -48,7 +60,10 @@ fun NavGraph(navController: NavHostController, viewModelStore: ViewModelProvider
             }
         }
 
-        composable(route = NavRoute.Unblu.route, enterTransition = { fadeIn() }, exitTransition = { fadeOut() }) {
+        composable(
+            route = NavRoute.Unblu.route,
+            enterTransition = { fadeIn() },
+            exitTransition = { fadeOut() }) {
             SuccessScreen(navController, successViewModel) {
                 loginViewModel.stopUnblu()
                 successViewModel.setShowDialog(false)

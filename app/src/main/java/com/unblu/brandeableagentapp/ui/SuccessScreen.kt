@@ -41,10 +41,13 @@ fun SuccessScreen(
     onNavigateBack: () -> Unit
 ) {
     // State for showing the logout confirmation dialog
-    val showDialog by viewModel.showDialog
-    val unbluView by viewModel.mainView
-    val chatUiOpen by viewModel.chatUiOpen
+    val showDialog by remember {
+        viewModel.showDialog
+    }
 
+    val chatUiOpen by remember {
+        viewModel.chatUiOpen
+    }
     Scaffold(
 
     ) { it ->
@@ -54,12 +57,14 @@ fun SuccessScreen(
                 .fillMaxSize()
                 .focusable(true),
                 factory = {
-                    unbluView?.detachView()
-                    unbluView?.apply { configView(this) }
-                    unbluView ?: RelativeLayout(it)
+                    val unbluView = viewModel.getView()
+                    unbluView.detachView()
+                    unbluView.apply { configView(this) }
+                    unbluView
                 })
 
-            AnimatedVisibility(visible = !chatUiOpen,
+            AnimatedVisibility(
+                visible = !chatUiOpen,
                 enter = fadeIn(animationSpec = tween(durationMillis = 500)),
                 exit = fadeOut(animationSpec = tween(durationMillis = 500))
             ) {
@@ -91,7 +96,7 @@ fun SuccessScreen(
                     cancelText = stringResource(id = R.string.logout_confirmation_negative),
                     confirmText = stringResource(id = R.string.logout_confirmation_positive),
                     onConfirm = {
-                        goBack(onNavigateBack, unbluView, navController)
+                        goBack(onNavigateBack, viewModel.getView(), navController)
                     },
                     alertDialogColors = AlertDialogColorDefaults.alertDialogColors()
                 )
@@ -99,24 +104,25 @@ fun SuccessScreen(
         }
 
         BackHandler() {
-            unbluView?.let {
+            viewModel.getView().let { unbluView->
                 UnbluNavUtil.getUnbluNav(unbluView)?.goBack { didGoBack ->
                     if (!didGoBack) {
                         viewModel.setShowDialog(true)
                     }
                 }
             } ?: run {
-                goBack(onNavigateBack, unbluView, navController)
+                goBack(onNavigateBack, viewModel.getView(), navController)
             }
         }
 
         LaunchedEffect(viewModel) {
             viewModel.sessionEnded.collect {
-                goBack(onNavigateBack, unbluView, navController)
+                goBack(onNavigateBack, viewModel.getView(), navController)
             }
         }
     }
 }
+
 
 private fun goBack(
     onNavigateBack: () -> Unit,

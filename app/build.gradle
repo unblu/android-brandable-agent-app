@@ -90,11 +90,6 @@ dependencies {
     implementation 'com.unblu.mobile-sdk-android:firebasenotificationmodule:4.7.0'
     implementation 'com.unblu.mobile-sdk-android:mobilecobrowsingmodule:4.7.0'
 
-   /* implementation 'com.unblu.mobile-sdk-android:coresdk'
-    implementation 'com.unblu.mobile-sdk-android:livekitmodule'
-    implementation 'com.unblu.mobile-sdk-android:firebasenotificationmodule'
-    implementation 'com.unblu.mobile-sdk-android:mobilecobrowsingmodule'*/
-
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'

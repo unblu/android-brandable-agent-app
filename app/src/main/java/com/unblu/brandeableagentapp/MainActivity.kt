@@ -1,6 +1,7 @@
 package com.unblu.brandeableagentapp
 
 import android.content.Intent
+import android.content.res.Configuration
 import android.os.Bundle
 import android.util.Log
 import android.view.WindowManager
@@ -75,7 +76,7 @@ class MainActivity : ComponentActivity() {
                 .onAgentInitialized()
                 .subscribe(
                     { agentClient ->
-                        unbluScreenViewModel.setMainView(agentClient.mainView)
+                        unbluScreenViewModel.setClient(agentClient)
                         compositeDisposable.add(agentClient.openConversation.subscribe { conversation->
                             unbluScreenViewModel.emitChatOpen(conversation.isPresent)
                         })
@@ -95,16 +96,17 @@ class MainActivity : ComponentActivity() {
                     || errorData.errorType == UnbluClientErrorType.AUTHORIZATION
                     || (errorData.errorType == UnbluClientErrorType.INVALID_URL)
                     || (errorData.errorType == UnbluClientErrorType.INTERNAL)){
-                     unbluScreenViewModel.endSession()
+                    loginViewModel.setErrorMessage(errorData.message)
+                    loginViewModel.resetSSOLogin()
                 }
+                unbluScreenViewModel.endSession()
             }
         )
 
         /**
-         *  you should only keep this code if the selected [AuthenticationType] is  [AuthenticationType.OAuth]
+         *  you should only keep this method if the selected [AuthenticationType] is  [AuthenticationType.OAuth]
          */
-        if (AppConfiguration.authType == AuthenticationType.OAuth)
-            configureOAuth()
+        configureOAuth()
 
         /**
          *  delete the block below if the [AuthenticationType] is [AuthenticationType.Direct]
@@ -146,6 +148,7 @@ class MainActivity : ComponentActivity() {
             configSignIn()
             lifecycleScope.launch {
                 openIdAuthController.eventReceived.collect { event ->
+                    if(AppConfiguration.authType != AuthenticationType.OAuth) return@collect
                     when (event) {
                         is TokenEvent.TokenReceived -> {
                             Log.d(MainActivity::javaClass.name, "Got token: ${event.token}")
@@ -201,7 +204,6 @@ class MainActivity : ComponentActivity() {
     }
 
     override fun onDestroy() {
-        viewModelStore.clear()
         compositeDisposable.clear()
         super.onDestroy()
     }

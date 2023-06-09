@@ -30,6 +30,7 @@ import com.unblu.brandeableagentapp.nav.NavRoute
 fun SettingsScreen(
     navController: NavController,
     settingsModel: State<SettingsModel>,
+    saveModel: () -> Unit,
     updateSettingsModel: (SettingsModel) -> Unit,
 ) {
     val settings by remember { settingsModel }
@@ -156,7 +157,10 @@ fun SettingsScreen(
                 }
                 item {
                     Button(
-                        onClick = { navController.navigate(NavRoute.Login.route) },
+                        onClick = {
+                                        saveModel()
+                                        navController.navigate(NavRoute.Login.route)
+                                  },
                         modifier = Modifier.padding(top = 16.dp)
                     ) {
                         Text(text = "Confirm")
@@ -173,9 +177,8 @@ fun SettingsScreen(
 fun SettingsScreenPreview() {
     val navController = rememberNavController()
     val settingsModel = remember { mutableStateOf(SettingsModel()) }
-    val updateSettingsModel: (SettingsModel) -> Unit = {}
 
     Surface {
-        SettingsScreen(navController, settingsModel, updateSettingsModel)
+        SettingsScreen(navController, settingsModel, {}, {})
     }
 }
