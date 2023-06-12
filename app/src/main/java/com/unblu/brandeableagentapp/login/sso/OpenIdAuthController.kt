@@ -69,7 +69,7 @@ class OpenIdAuthController(var application: AgentApplication) {
                                 Logger.d(TAG, "accessToken: $accessToken")
                                 _eventReceived.emit(TokenEvent.TokenReceived(accessToken))
                             }
-                            Log.d(TAG, " token refreshed: " + response.refreshToken)
+                            Log.d(TAG, " token refreshed.", " Token: ", response.refreshToken)
                         } else {
                             Log.w(TAG, " token not refreshed: AuthState is not authorized")
                         }
