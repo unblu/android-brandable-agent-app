@@ -6,13 +6,12 @@ import com.unblu.brandeableagentapp.model.SettingsModel
 
 object AppConfiguration {
 
-    var unbluServerUrl = "https://brandable-agent-mobile-app.uenv.dev"
-    //var unbluServerUrl = "https://testing7.dev.unblu-test.com"
 
+    var unbluServerUrl = "https://testing7.dev.unblu-test.com"
     var unbluApiKey = "MZsy5sFESYqU7MawXZgR_w"
-    //var unbluApiKey = "IzkRDlr6QtKIZ7tQBfz5sw"
     var entryPath = "/co-unblu"
-    var authType: AuthenticationType = AuthenticationType.OAuth
+
+    var authType: AuthenticationType = AuthenticationType.Direct
     //WebProxy
     var webAuthProxyServerAddress =  "https://agent-sso-trusted.cloud.unblu-env.com"
     //OAuth

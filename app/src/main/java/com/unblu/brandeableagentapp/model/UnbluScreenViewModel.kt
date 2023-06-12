@@ -6,7 +6,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.unblu.sdk.core.agent.UnbluAgentClient
-import com.unblu.sdk.core.internal.utils.Logger
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
@@ -19,10 +18,7 @@ class UnbluScreenViewModel : ViewModel() {
     private var _chatUiOpen =  mutableStateOf(false)
     val chatUiOpen: State<Boolean> = _chatUiOpen
   private  lateinit var agentClient: UnbluAgentClient
-    override fun onCleared() {
-        super.onCleared()
-        Logger.d("UnbluScreenViewModel", "fucking cleared damn")
-    }
+
     fun setClient(agentClient: UnbluAgentClient) {
         this.agentClient =  agentClient
     }

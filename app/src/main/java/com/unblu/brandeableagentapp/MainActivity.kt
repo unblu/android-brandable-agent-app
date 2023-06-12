@@ -27,7 +27,6 @@ import com.unblu.brandeableagentapp.ui.theme.BrandeableAgentAppTheme
 import com.unblu.sdk.core.Unblu
 import com.unblu.sdk.core.application.UnbluApplicationHelper
 import com.unblu.sdk.core.errortype.UnbluClientErrorType
-import com.unblu.sdk.core.internal.utils.Logger
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import kotlinx.coroutines.launch
 import net.openid.appauth.*
@@ -121,7 +120,7 @@ class MainActivity : ComponentActivity() {
                 AuthenticationType.OAuth -> openIdAuthController.startSignIn(signInLauncher)
                 AuthenticationType.WebProxy -> loginViewModel.launchSSO()
                 else-> {
-                        Logger.d("MainActivity", "Ui was requested, but direct login is required")
+                        Log.d("MainActivity", "Ui was requested, but direct login is required")
                 }
             }
         }

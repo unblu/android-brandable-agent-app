@@ -13,8 +13,6 @@ import com.unblu.brandeableagentapp.data.AppConfiguration.oAuthRedirectUri
 import com.unblu.brandeableagentapp.data.AppConfiguration.oAuthTokenEndpoint
 import com.unblu.brandeableagentapp.model.AuthenticationType
 import com.unblu.brandeableagentapp.model.TokenEvent
-import com.unblu.sdk.core.configuration.UnbluPreferencesStorage
-import com.unblu.sdk.core.internal.utils.Logger
 import io.reactivex.rxjava3.annotations.NonNull
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -66,10 +64,10 @@ class OpenIdAuthController(var application: AgentApplication) {
                             storeAuthState(authState, application.getUnbluPrefs())
                             // Handle successful token refresh here
                             CoroutineScope(Dispatchers.Default).launch {
-                                Logger.d(TAG, "accessToken: $accessToken")
+                                Log.d(TAG, "accessToken: $accessToken")
                                 _eventReceived.emit(TokenEvent.TokenReceived(accessToken))
                             }
-                            Log.d(TAG, " token refreshed.", " Token: ", response.refreshToken)
+                            Log.d(TAG, " token refreshed. Token:  ${response.accessToken}")
                         } else {
                             Log.w(TAG, " token not refreshed: AuthState is not authorized")
                         }

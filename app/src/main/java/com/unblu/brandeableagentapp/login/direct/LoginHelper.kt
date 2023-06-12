@@ -8,13 +8,13 @@
 package com.unblu.brandeableagentapp.login.direct
 
 import android.net.Uri
+import android.util.Log
 import android.webkit.ValueCallback
 import androidx.core.util.Pair
 import com.unblu.brandeableagentapp.login.LoginFailedException
 import com.unblu.sdk.core.configuration.UnbluClientConfiguration
 import com.unblu.sdk.core.configuration.UnbluCookie
 import com.unblu.sdk.core.internal.utils.CookieUtils
-import com.unblu.sdk.core.internal.utils.Logger
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.schedulers.Schedulers
@@ -84,12 +84,10 @@ object LoginHelper {
             .subscribe(
                 { result: Pair<out Any?, LoginFailedException?> ->
                     if (result.first == null) {
-                        Logger.e(
+                        Log.e(
                             TAG,
                             "Failed to login with the given credentials!",
-                            result.second,
-                            " Error: ",
-                            result.second!!.message
+                            result.second
                         )
                         failure.onReceiveValue(result.second!!.message)
                     } else {
@@ -100,8 +98,7 @@ object LoginHelper {
                     }
                 }
             ) { throwable: Throwable ->
-                throwable.printStackTrace()
-                Logger.e(TAG, throwable.message)
+                throwable.message?.let { Log.e(TAG, it, throwable) }
                 failure.onReceiveValue("Could not Login: ${throwable.message}")
             }
     }
@@ -113,7 +110,7 @@ object LoginHelper {
             obj.put("password", password)
             obj
         } catch (e: JSONException) {
-            Logger.e(TAG, "Failed to encode authentication login credentials", "error:", e.message)
+            Log.e(TAG, "Failed to encode authentication login credentials", e)
             null
         }
     }
