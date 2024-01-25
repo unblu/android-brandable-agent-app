@@ -5,7 +5,7 @@ buildscript {
     }
 
     ext {
-        gradle_version = '7.2.2'
+        gradle_version = '7.4.2'
         kotlin_version = "1.8.0"
         nav_version = "2.3.2"
         compose_version = '1.4.2'
@@ -19,7 +19,8 @@ buildscript {
         classpath "com.android.tools.build:gradle:$gradle_version"
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         classpath "androidx.navigation:navigation-safe-args-gradle-plugin:$nav_version"
-        classpath 'com.google.gms:google-services:4.3.15'
+        classpath 'com.google.gms:google-services:4.4.0'
+        classpath 'com.jaredsburrows:gradle-license-plugin:0.9.3'
 
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
@@ -39,4 +40,21 @@ allprojects {
 
 task clean(type: Delete) {
     delete rootProject.buildDir
+}
+
+task collectLicenseReports(type: Copy) {
+    // Make this task depend on all modules' generateLicenseReport tasks
+    dependsOn(subprojects*.tasks*.matching { it.name == 'licenseReleaseReport' })
+
+    // Collect all JSON reports from all modules
+    subprojects.each { subproject ->
+        from (fileTree(dir: "${subproject.projectDir}/build/reports/licenses", include: '*.html')) {
+            rename { String fileName ->
+                "${subproject.name}-$fileName"
+            }
+        }
+    }
+
+    // Define where the collected reports should be placed
+    into "$buildDir/reports/licenses"
 }
