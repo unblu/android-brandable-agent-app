@@ -18,7 +18,6 @@ import com.unblu.sdk.core.module.call.CallModuleProviderFactory
 import com.unblu.sdk.core.notification.UnbluNotificationApi
 import com.unblu.sdk.module.call.CallModule
 import com.unblu.sdk.module.call.CallModuleProvider
-import com.unblu.sdk.module.firebase_notification.UnbluFirebaseNotificationService
 import com.unblu.sdk.module.mobilecobrowsing.MobileCoBrowsingModule
 import com.unblu.sdk.module.mobilecobrowsing.MobileCoBrowsingModuleProvider
 import io.reactivex.rxjava3.core.Observable
@@ -38,7 +37,9 @@ class UnbluController(
     private lateinit var callModule: CallModule
     private lateinit var coBrowsingModule: MobileCoBrowsingModule
     private var unbluNotificationApi: UnbluNotificationApi =
-        UnbluFirebaseNotificationService.getNotificationApi()
+        //Use line below if you will be using UnbluFirebaseNotificationService to receive push notifications. Also make sure you have your google-services.json in the app/ folder.
+        //UnbluFirebaseNotificationService.getNotificationApi()
+        UnbluNotificationApi.createNotificationApi()
 
     fun start(
         config: UnbluClientConfiguration,

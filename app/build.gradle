@@ -10,7 +10,7 @@ android {
     defaultConfig {
         applicationId "com.unblu.brandeableagentapp"
         minSdk 24
-        targetSdk 34
+        targetSdk 33
         versionCode 1
         versionName "1.0"
 
@@ -32,6 +32,7 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.debug
         }
     }
     compileOptions {
@@ -87,7 +88,8 @@ dependencies {
     implementation 'com.unblu.mobile-sdk-android:coresdk:4.7.11'
     implementation 'com.unblu.mobile-sdk-android:livekitmodule:4.7.11'
     implementation 'com.unblu.mobile-sdk-android:callmodule:4.7.11'
-    implementation 'com.unblu.mobile-sdk-android:firebasenotificationmodule:4.7.11'
+    //Use line below if you will be using UnbluFirebaseNotificationService to receive push notifications.
+    //implementation 'com.unblu.mobile-sdk-android:firebasenotificationmodule:4.7.11'
     implementation 'com.unblu.mobile-sdk-android:mobilecobrowsingmodule:4.7.11'
 
     testImplementation 'junit:junit:4.13.2'
@@ -96,7 +98,10 @@ dependencies {
     debugImplementation "androidx.compose.ui:ui-tooling:$compose_ui_version"
     debugImplementation "androidx.compose.ui:ui-test-manifest:$compose_ui_version"
 }
-apply plugin: 'com.google.gms.google-services'
+
+//Use line below if you will be using UnbluFirebaseNotificationService to receive push notifications.
+//apply plugin: 'com.google.gms.google-services'
+
 apply plugin: "com.jaredsburrows.license"
 licenseReport {
     generateCsvReport = false
