@@ -85,6 +85,7 @@ fun LoginScreenSSO(navController: NavHostController, viewModel: LoginViewModel) 
                                 webView.clearCache(true)
                                 webView.loadUrl(AppConfiguration.webAuthProxyServerAddress)
                             }
+                            webView.settings.javaScriptEnabled = true
                             webView
                         }
                     )
