@@ -10,6 +10,7 @@ package com.unblu.brandeableagentapp.login.direct
 import android.net.Uri
 import android.util.Log
 import android.webkit.ValueCallback
+import androidx.compose.ui.text.toLowerCase
 import androidx.core.util.Pair
 import com.unblu.brandeableagentapp.login.LoginFailedException
 import com.unblu.sdk.core.configuration.UnbluClientConfiguration
@@ -151,7 +152,7 @@ object LoginHelper {
     private fun getAuthenticationCookies(headers: Map<String, List<String>>): Set<UnbluCookie> {
         val authCookies: MutableMap<String, String> = HashMap()
         for ((key, value) in headers) {
-            if ("Set-Cookie" == key) {
+            if (key?.lowercase() == "set-cookie") {
                 for (setCookieValue in value) {
                     val responseCookieList = HttpCookie.parse(setCookieValue)
                     for (responseCookie in responseCookieList) {
